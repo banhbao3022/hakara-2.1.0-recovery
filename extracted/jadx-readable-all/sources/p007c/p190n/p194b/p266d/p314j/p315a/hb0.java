@@ -1,0 +1,21 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
+import p007c.p190n.p194b.p266d.p267a.C2193t;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final class hb0 implements zc2<Set<bc0<C2193t.a>>> {
+    public hb0(ja0 ja0Var) {
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.gd2
+    /* JADX INFO: renamed from: a */
+    public final Object mo4613a() {
+        Set setEmptySet = Collections.emptySet();
+        Objects.requireNonNull(setEmptySet, "Cannot return null from a non-@Nullable @Provides method");
+        return setEmptySet;
+    }
+}

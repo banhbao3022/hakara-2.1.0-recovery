@@ -1,0 +1,21 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import android.os.RemoteException;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final /* synthetic */ class v31 implements ze1 {
+
+    /* JADX INFO: renamed from: a */
+    public final yv2 f20693a;
+
+    public v31(yv2 yv2Var) {
+        this.f20693a = yv2Var;
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.ze1
+    /* JADX INFO: renamed from: a */
+    public final void mo5685a(Object obj) throws RemoteException {
+        ((InterfaceC3123i0) obj).mo6127A3(this.f20693a);
+    }
+}

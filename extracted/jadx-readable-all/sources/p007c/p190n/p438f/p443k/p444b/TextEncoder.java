@@ -1,0 +1,66 @@
+package p007c.p190n.p438f.p443k.p444b;
+
+/* JADX INFO: renamed from: c.n.f.k.b.l, reason: use source file name */
+/* JADX INFO: compiled from: TextEncoder.java */
+/* JADX INFO: loaded from: classes.dex */
+public final class TextEncoder extends C40Encoder {
+    @Override // p007c.p190n.p438f.p443k.p444b.C40Encoder
+    /* JADX INFO: renamed from: c */
+    public int mo12361c(char c2, StringBuilder sb) {
+        if (c2 == ' ') {
+            sb.append((char) 3);
+            return 1;
+        }
+        if (c2 >= '0' && c2 <= '9') {
+            sb.append((char) ((c2 - '0') + 4));
+            return 1;
+        }
+        if (c2 >= 'a' && c2 <= 'z') {
+            sb.append((char) ((c2 - 'a') + 14));
+            return 1;
+        }
+        if (c2 < ' ') {
+            sb.append((char) 0);
+            sb.append(c2);
+            return 2;
+        }
+        if (c2 >= '!' && c2 <= '/') {
+            sb.append((char) 1);
+            sb.append((char) (c2 - '!'));
+            return 2;
+        }
+        if (c2 >= ':' && c2 <= '@') {
+            sb.append((char) 1);
+            sb.append((char) ((c2 - ':') + 15));
+            return 2;
+        }
+        if (c2 >= '[' && c2 <= '_') {
+            sb.append((char) 1);
+            sb.append((char) ((c2 - '[') + 22));
+            return 2;
+        }
+        if (c2 == '`') {
+            sb.append((char) 2);
+            sb.append((char) (c2 - '`'));
+            return 2;
+        }
+        if (c2 >= 'A' && c2 <= 'Z') {
+            sb.append((char) 2);
+            sb.append((char) ((c2 - 'A') + 1));
+            return 2;
+        }
+        if (c2 < '{' || c2 > 127) {
+            sb.append("\u0001\u001e");
+            return mo12361c((char) (c2 - 128), sb) + 2;
+        }
+        sb.append((char) 2);
+        sb.append((char) ((c2 - '{') + 27));
+        return 2;
+    }
+
+    @Override // p007c.p190n.p438f.p443k.p444b.C40Encoder
+    /* JADX INFO: renamed from: d */
+    public int mo12362d() {
+        return 2;
+    }
+}

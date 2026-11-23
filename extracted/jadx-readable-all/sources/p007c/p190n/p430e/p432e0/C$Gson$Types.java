@@ -1,0 +1,446 @@
+package p007c.p190n.p430e.p432e0;
+
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import p007c.p071d.p078c.p079a.outline;
+import p007c.p190n.p194b.p334e.C4799a;
+
+/* JADX INFO: renamed from: c.n.e.e0.a, reason: use source file name and invalid class name */
+/* JADX INFO: compiled from: $Gson$Types.java */
+/* JADX INFO: loaded from: classes.dex */
+public final class C$Gson$Types {
+
+    /* JADX INFO: renamed from: a */
+    public static final Type[] f27323a = new Type[0];
+
+    /* JADX INFO: renamed from: c.n.e.e0.a$a */
+    /* JADX INFO: compiled from: $Gson$Types.java */
+    public static final class a implements GenericArrayType, Serializable {
+
+        /* JADX INFO: renamed from: f */
+        public final Type f27324f;
+
+        public a(Type type) {
+            this.f27324f = C$Gson$Types.m12220a(type);
+        }
+
+        public boolean equals(Object obj) {
+            return (obj instanceof GenericArrayType) && C$Gson$Types.m12222c(this, (GenericArrayType) obj);
+        }
+
+        @Override // java.lang.reflect.GenericArrayType
+        public Type getGenericComponentType() {
+            return this.f27324f;
+        }
+
+        public int hashCode() {
+            return this.f27324f.hashCode();
+        }
+
+        public String toString() {
+            return C$Gson$Types.m12228i(this.f27324f) + "[]";
+        }
+    }
+
+    /* JADX INFO: renamed from: c.n.e.e0.a$b */
+    /* JADX INFO: compiled from: $Gson$Types.java */
+    public static final class b implements ParameterizedType, Serializable {
+
+        /* JADX INFO: renamed from: f */
+        public final Type f27325f;
+
+        /* JADX INFO: renamed from: g */
+        public final Type f27326g;
+
+        /* JADX INFO: renamed from: h */
+        public final Type[] f27327h;
+
+        public b(Type type, Type type2, Type... typeArr) {
+            if (type2 instanceof Class) {
+                Class cls = (Class) type2;
+                boolean z = true;
+                boolean z2 = Modifier.isStatic(cls.getModifiers()) || cls.getEnclosingClass() == null;
+                if (type == null && !z2) {
+                    z = false;
+                }
+                C4799a.m10992i(z);
+            }
+            this.f27325f = type == null ? null : C$Gson$Types.m12220a(type);
+            this.f27326g = C$Gson$Types.m12220a(type2);
+            Type[] typeArr2 = (Type[]) typeArr.clone();
+            this.f27327h = typeArr2;
+            int length = typeArr2.length;
+            for (int i = 0; i < length; i++) {
+                Objects.requireNonNull(this.f27327h[i]);
+                C$Gson$Types.m12221b(this.f27327h[i]);
+                Type[] typeArr3 = this.f27327h;
+                typeArr3[i] = C$Gson$Types.m12220a(typeArr3[i]);
+            }
+        }
+
+        public boolean equals(Object obj) {
+            return (obj instanceof ParameterizedType) && C$Gson$Types.m12222c(this, (ParameterizedType) obj);
+        }
+
+        @Override // java.lang.reflect.ParameterizedType
+        public Type[] getActualTypeArguments() {
+            return (Type[]) this.f27327h.clone();
+        }
+
+        @Override // java.lang.reflect.ParameterizedType
+        public Type getOwnerType() {
+            return this.f27325f;
+        }
+
+        @Override // java.lang.reflect.ParameterizedType
+        public Type getRawType() {
+            return this.f27326g;
+        }
+
+        public int hashCode() {
+            int iHashCode = Arrays.hashCode(this.f27327h) ^ this.f27326g.hashCode();
+            Type type = this.f27325f;
+            return iHashCode ^ (type != null ? type.hashCode() : 0);
+        }
+
+        public String toString() {
+            int length = this.f27327h.length;
+            if (length == 0) {
+                return C$Gson$Types.m12228i(this.f27326g);
+            }
+            StringBuilder sb = new StringBuilder((length + 1) * 30);
+            sb.append(C$Gson$Types.m12228i(this.f27326g));
+            sb.append("<");
+            sb.append(C$Gson$Types.m12228i(this.f27327h[0]));
+            for (int i = 1; i < length; i++) {
+                sb.append(", ");
+                sb.append(C$Gson$Types.m12228i(this.f27327h[i]));
+            }
+            sb.append(">");
+            return sb.toString();
+        }
+    }
+
+    /* JADX INFO: renamed from: c.n.e.e0.a$c */
+    /* JADX INFO: compiled from: $Gson$Types.java */
+    public static final class c implements WildcardType, Serializable {
+
+        /* JADX INFO: renamed from: f */
+        public final Type f27328f;
+
+        /* JADX INFO: renamed from: g */
+        public final Type f27329g;
+
+        public c(Type[] typeArr, Type[] typeArr2) {
+            C4799a.m10992i(typeArr2.length <= 1);
+            C4799a.m10992i(typeArr.length == 1);
+            if (typeArr2.length != 1) {
+                Objects.requireNonNull(typeArr[0]);
+                C$Gson$Types.m12221b(typeArr[0]);
+                this.f27329g = null;
+                this.f27328f = C$Gson$Types.m12220a(typeArr[0]);
+                return;
+            }
+            Objects.requireNonNull(typeArr2[0]);
+            C$Gson$Types.m12221b(typeArr2[0]);
+            C4799a.m10992i(typeArr[0] == Object.class);
+            this.f27329g = C$Gson$Types.m12220a(typeArr2[0]);
+            this.f27328f = Object.class;
+        }
+
+        public boolean equals(Object obj) {
+            return (obj instanceof WildcardType) && C$Gson$Types.m12222c(this, (WildcardType) obj);
+        }
+
+        @Override // java.lang.reflect.WildcardType
+        public Type[] getLowerBounds() {
+            Type type = this.f27329g;
+            return type != null ? new Type[]{type} : C$Gson$Types.f27323a;
+        }
+
+        @Override // java.lang.reflect.WildcardType
+        public Type[] getUpperBounds() {
+            return new Type[]{this.f27328f};
+        }
+
+        public int hashCode() {
+            Type type = this.f27329g;
+            return (type != null ? type.hashCode() + 31 : 1) ^ (this.f27328f.hashCode() + 31);
+        }
+
+        public String toString() {
+            if (this.f27329g != null) {
+                StringBuilder sbM1556G = outline.m1556G("? super ");
+                sbM1556G.append(C$Gson$Types.m12228i(this.f27329g));
+                return sbM1556G.toString();
+            }
+            if (this.f27328f == Object.class) {
+                return "?";
+            }
+            StringBuilder sbM1556G2 = outline.m1556G("? extends ");
+            sbM1556G2.append(C$Gson$Types.m12228i(this.f27328f));
+            return sbM1556G2.toString();
+        }
+    }
+
+    /* JADX INFO: renamed from: a */
+    public static Type m12220a(Type type) {
+        if (type instanceof Class) {
+            Class cls = (Class) type;
+            return cls.isArray() ? new a(m12220a(cls.getComponentType())) : cls;
+        }
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            return new b(parameterizedType.getOwnerType(), parameterizedType.getRawType(), parameterizedType.getActualTypeArguments());
+        }
+        if (type instanceof GenericArrayType) {
+            return new a(((GenericArrayType) type).getGenericComponentType());
+        }
+        if (!(type instanceof WildcardType)) {
+            return type;
+        }
+        WildcardType wildcardType = (WildcardType) type;
+        return new c(wildcardType.getUpperBounds(), wildcardType.getLowerBounds());
+    }
+
+    /* JADX INFO: renamed from: b */
+    public static void m12221b(Type type) {
+        C4799a.m10992i(((type instanceof Class) && ((Class) type).isPrimitive()) ? false : true);
+    }
+
+    /* JADX INFO: renamed from: c */
+    public static boolean m12222c(Type type, Type type2) {
+        if (type == type2) {
+            return true;
+        }
+        if (type instanceof Class) {
+            return type.equals(type2);
+        }
+        if (type instanceof ParameterizedType) {
+            if (!(type2 instanceof ParameterizedType)) {
+                return false;
+            }
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            ParameterizedType parameterizedType2 = (ParameterizedType) type2;
+            Type ownerType = parameterizedType.getOwnerType();
+            Type ownerType2 = parameterizedType2.getOwnerType();
+            return (ownerType == ownerType2 || (ownerType != null && ownerType.equals(ownerType2))) && parameterizedType.getRawType().equals(parameterizedType2.getRawType()) && Arrays.equals(parameterizedType.getActualTypeArguments(), parameterizedType2.getActualTypeArguments());
+        }
+        if (type instanceof GenericArrayType) {
+            if (type2 instanceof GenericArrayType) {
+                return m12222c(((GenericArrayType) type).getGenericComponentType(), ((GenericArrayType) type2).getGenericComponentType());
+            }
+            return false;
+        }
+        if (type instanceof WildcardType) {
+            if (!(type2 instanceof WildcardType)) {
+                return false;
+            }
+            WildcardType wildcardType = (WildcardType) type;
+            WildcardType wildcardType2 = (WildcardType) type2;
+            return Arrays.equals(wildcardType.getUpperBounds(), wildcardType2.getUpperBounds()) && Arrays.equals(wildcardType.getLowerBounds(), wildcardType2.getLowerBounds());
+        }
+        if (!(type instanceof TypeVariable) || !(type2 instanceof TypeVariable)) {
+            return false;
+        }
+        TypeVariable typeVariable = (TypeVariable) type;
+        TypeVariable typeVariable2 = (TypeVariable) type2;
+        return typeVariable.getGenericDeclaration() == typeVariable2.getGenericDeclaration() && typeVariable.getName().equals(typeVariable2.getName());
+    }
+
+    /* JADX INFO: renamed from: d */
+    public static Type m12223d(Type type, Class<?> cls, Class<?> cls2) {
+        if (cls2 == cls) {
+            return type;
+        }
+        if (cls2.isInterface()) {
+            Class<?>[] interfaces = cls.getInterfaces();
+            int length = interfaces.length;
+            for (int i = 0; i < length; i++) {
+                if (interfaces[i] == cls2) {
+                    return cls.getGenericInterfaces()[i];
+                }
+                if (cls2.isAssignableFrom(interfaces[i])) {
+                    return m12223d(cls.getGenericInterfaces()[i], interfaces[i], cls2);
+                }
+            }
+        }
+        if (!cls.isInterface()) {
+            while (cls != Object.class) {
+                Class<? super Object> superclass = cls.getSuperclass();
+                if (superclass == cls2) {
+                    return cls.getGenericSuperclass();
+                }
+                if (cls2.isAssignableFrom(superclass)) {
+                    return m12223d(cls.getGenericSuperclass(), superclass, cls2);
+                }
+                cls = superclass;
+            }
+        }
+        return cls2;
+    }
+
+    /* JADX INFO: renamed from: e */
+    public static Class<?> m12224e(Type type) {
+        if (type instanceof Class) {
+            return (Class) type;
+        }
+        if (type instanceof ParameterizedType) {
+            Type rawType = ((ParameterizedType) type).getRawType();
+            C4799a.m10992i(rawType instanceof Class);
+            return (Class) rawType;
+        }
+        if (type instanceof GenericArrayType) {
+            return Array.newInstance(m12224e(((GenericArrayType) type).getGenericComponentType()), 0).getClass();
+        }
+        if (type instanceof TypeVariable) {
+            return Object.class;
+        }
+        if (type instanceof WildcardType) {
+            return m12224e(((WildcardType) type).getUpperBounds()[0]);
+        }
+        throw new IllegalArgumentException("Expected a Class, ParameterizedType, or GenericArrayType, but <" + type + "> is of type " + (type == null ? "null" : type.getClass().getName()));
+    }
+
+    /* JADX INFO: renamed from: f */
+    public static Type m12225f(Type type, Class<?> cls, Class<?> cls2) {
+        if (type instanceof WildcardType) {
+            type = ((WildcardType) type).getUpperBounds()[0];
+        }
+        C4799a.m10992i(cls2.isAssignableFrom(cls));
+        return m12226g(type, cls, m12223d(type, cls, cls2));
+    }
+
+    /* JADX INFO: renamed from: g */
+    public static Type m12226g(Type type, Class<?> cls, Type type2) {
+        return m12227h(type, cls, type2, new HashSet());
+    }
+
+    /* JADX WARN: Code duplicated, block: B:23:0x004a  */
+    /* JADX INFO: renamed from: h */
+    public static Type m12227h(Type type, Class<?> cls, Type type2, Collection<TypeVariable> collection) {
+        Type type3;
+        WildcardType wildcardType;
+        Type[] lowerBounds;
+        TypeVariable typeVariable;
+        do {
+            int i = 0;
+            if (!(type2 instanceof TypeVariable)) {
+                if (type2 instanceof Class) {
+                    Class cls2 = (Class) type2;
+                    if (cls2.isArray()) {
+                        Class<?> componentType = cls2.getComponentType();
+                        Type typeM12227h = m12227h(type, cls, componentType, collection);
+                        return componentType == typeM12227h ? cls2 : new a(typeM12227h);
+                    }
+                }
+                if (type2 instanceof GenericArrayType) {
+                    GenericArrayType genericArrayType = (GenericArrayType) type2;
+                    Type genericComponentType = genericArrayType.getGenericComponentType();
+                    Type typeM12227h2 = m12227h(type, cls, genericComponentType, collection);
+                    return genericComponentType == typeM12227h2 ? genericArrayType : new a(typeM12227h2);
+                }
+                if (type2 instanceof ParameterizedType) {
+                    ParameterizedType parameterizedType = (ParameterizedType) type2;
+                    Type ownerType = parameterizedType.getOwnerType();
+                    Type typeM12227h3 = m12227h(type, cls, ownerType, collection);
+                    boolean z = typeM12227h3 != ownerType;
+                    Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                    int length = actualTypeArguments.length;
+                    while (i < length) {
+                        Type typeM12227h4 = m12227h(type, cls, actualTypeArguments[i], collection);
+                        if (typeM12227h4 != actualTypeArguments[i]) {
+                            if (!z) {
+                                actualTypeArguments = (Type[]) actualTypeArguments.clone();
+                                z = true;
+                            }
+                            actualTypeArguments[i] = typeM12227h4;
+                        }
+                        i++;
+                    }
+                    return z ? new b(typeM12227h3, parameterizedType.getRawType(), actualTypeArguments) : parameterizedType;
+                }
+                if (type2 instanceof WildcardType) {
+                    wildcardType = (WildcardType) type2;
+                    Type[] lowerBounds2 = wildcardType.getLowerBounds();
+                    Type[] upperBounds = wildcardType.getUpperBounds();
+                    if (lowerBounds2.length == 1) {
+                        Type typeM12227h5 = m12227h(type, cls, lowerBounds2[0], collection);
+                        if (typeM12227h5 != lowerBounds2[0]) {
+                            if (typeM12227h5 instanceof WildcardType) {
+                                type3 = type2;
+                                type3 = wildcardType;
+                                lowerBounds = ((WildcardType) typeM12227h5).getLowerBounds();
+                            } else {
+                                type3 = type2;
+                                type3 = wildcardType;
+                                lowerBounds = new Type[]{typeM12227h5};
+                            }
+                            return new c(new Type[]{Object.class}, lowerBounds);
+                        }
+                    } else if (upperBounds.length == 1) {
+                        type3 = type2;
+                        type3 = wildcardType;
+                        Type typeM12227h6 = m12227h(type, cls, upperBounds[0], collection);
+                        type3 = wildcardType;
+                        if (typeM12227h6 != upperBounds[0]) {
+                            return new c(typeM12227h6 instanceof WildcardType ? ((WildcardType) typeM12227h6).getUpperBounds() : new Type[]{typeM12227h6}, f27323a);
+                        }
+                    }
+                }
+                type3 = type2;
+                type3 = wildcardType;
+                type3 = type2;
+                type3 = wildcardType;
+                type3 = type2;
+                return type3;
+            }
+            typeVariable = (TypeVariable) type2;
+            if (collection.contains(typeVariable)) {
+                return type2;
+            }
+            collection.add(typeVariable);
+            GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();
+            Class cls3 = genericDeclaration instanceof Class ? (Class) genericDeclaration : null;
+            if (cls3 == null) {
+                type2 = typeVariable;
+            } else {
+                Type typeM12223d = m12223d(type, cls, cls3);
+                if (typeM12223d instanceof ParameterizedType) {
+                    TypeVariable[] typeParameters = cls3.getTypeParameters();
+                    int length2 = typeParameters.length;
+                    while (true) {
+                        if (i >= length2) {
+                            throw new NoSuchElementException();
+                        }
+                        if (typeVariable.equals(typeParameters[i])) {
+                            type2 = ((ParameterizedType) typeM12223d).getActualTypeArguments()[i];
+                            break;
+                        }
+                        i++;
+                    }
+                } else {
+                    type2 = typeVariable;
+                }
+            }
+        } while (type2 != typeVariable);
+        return type2;
+    }
+
+    /* JADX INFO: renamed from: i */
+    public static String m12228i(Type type) {
+        return type instanceof Class ? ((Class) type).getName() : type.toString();
+    }
+}

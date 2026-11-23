@@ -1,0 +1,41 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import java.security.GeneralSecurityException;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final class iy1 extends jw1<u42, r42> {
+    public iy1(ky1 ky1Var, Class cls) {
+        super(cls);
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.jw1
+    /* JADX INFO: renamed from: a */
+    public final /* bridge */ /* synthetic */ void mo6123a(l92 l92Var) throws GeneralSecurityException {
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.jw1
+    /* JADX INFO: renamed from: b */
+    public final /* bridge */ /* synthetic */ l92 mo6124b(g72 g72Var) throws r82 {
+        return u42.m8468v(g72Var, s72.m8347a());
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.jw1
+    /* JADX INFO: renamed from: c */
+    public final r42 mo6125c(l92 l92Var) throws GeneralSecurityException {
+        q42 q42VarM8256z = r42.m8256z();
+        if (q42VarM8256z.f13191h) {
+            q42VarM8256z.m6298m();
+            q42VarM8256z.f13191h = false;
+        }
+        ((r42) q42VarM8256z.f13190g).zzb = 0;
+        byte[] bArrM6935a = g62.m6935a(32);
+        g72 g72VarM6939G = g72.m6939G(bArrM6935a, 0, bArrM6935a.length);
+        if (q42VarM8256z.f13191h) {
+            q42VarM8256z.m6298m();
+            q42VarM8256z.f13191h = false;
+        }
+        ((r42) q42VarM8256z.f13190g).zze = g72VarM6939G;
+        return q42VarM8256z.m6300o();
+    }
+}

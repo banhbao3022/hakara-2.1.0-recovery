@@ -1,0 +1,21 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import java.util.Set;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final class sa0 implements zc2<Set<bc0<a70>>> {
+
+    /* JADX INFO: renamed from: a */
+    public final ja0 f19508a;
+
+    public sa0(ja0 ja0Var) {
+        this.f19508a = ja0Var;
+    }
+
+    @Override // p007c.p190n.p194b.p266d.p314j.p315a.gd2
+    /* JADX INFO: renamed from: a */
+    public final Object mo4613a() {
+        return this.f19508a.f15518c;
+    }
+}

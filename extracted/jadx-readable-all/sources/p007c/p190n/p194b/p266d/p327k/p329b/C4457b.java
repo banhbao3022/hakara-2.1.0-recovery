@@ -1,0 +1,16 @@
+package p007c.p190n.p194b.p266d.p327k.p329b;
+
+/* JADX INFO: renamed from: c.n.b.d.k.b.b */
+/* JADX INFO: compiled from: com.google.android.gms:play-services-measurement-impl@@18.0.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final /* synthetic */ class C4457b implements InterfaceC4493e {
+
+    /* JADX INFO: renamed from: a */
+    public static final InterfaceC4493e f23722a = new C4457b();
+
+    @Override // p007c.p190n.p194b.p266d.p327k.p329b.InterfaceC4493e
+    /* JADX INFO: renamed from: d */
+    public final String mo10379d(String str, String str2) {
+        return null;
+    }
+}

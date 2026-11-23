@@ -1,0 +1,24 @@
+tiny	2	0	obfuscated	restored
+c	c/g/a/l/a	com/bumptech/glide/gifdecoder/GifDecoder
+	m	()Landroid/graphics/Bitmap;	a	getNextFrame
+	m	()V	b	advance
+	m	()I	c	getFrameCount
+	m	()I	d	getNextDelay
+	m	()Ljava/nio/ByteBuffer;	e	getData
+	m	()I	f	getCurrentFrameIndex
+	m	()I	g	getByteSize
+c	c/g/a/l/a$a	com/bumptech/glide/gifdecoder/GifDecoder$BitmapProvider
+c	c/g/a/l/b	com/bumptech/glide/gifdecoder/GifFrame
+c	c/g/a/l/c	com/bumptech/glide/gifdecoder/GifHeader
+c	c/g/a/l/d	com/bumptech/glide/gifdecoder/GifHeaderParser
+c	c/g/a/l/e	com/bumptech/glide/gifdecoder/StandardGifDecoder
+	m	()Landroid/graphics/Bitmap;	a	getNextFrame
+	m	()V	b	advance
+	m	()I	c	getFrameCount
+	m	()I	d	getNextDelay
+	m	()Ljava/nio/ByteBuffer;	e	getData
+	m	()I	f	getCurrentFrameIndex
+	m	()I	g	getByteSize
+	m	()Landroid/graphics/Bitmap;	h	getNextBitmap
+	m	(Landroid/graphics/Bitmap$Config;)V	i	setDefaultBitmapConfig
+	m	(Lc/g/a/l/b;Lc/g/a/l/b;)Landroid/graphics/Bitmap;	j	setPixels

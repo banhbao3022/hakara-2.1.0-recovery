@@ -1,0 +1,13 @@
+package p477d1;
+
+/* JADX INFO: renamed from: d1.d, reason: use source file name */
+/* JADX INFO: compiled from: KotlinNullPointerException.kt */
+/* JADX INFO: loaded from: classes.dex */
+public class KotlinNullPointerException extends NullPointerException {
+    public KotlinNullPointerException() {
+    }
+
+    public KotlinNullPointerException(String str) {
+        super(str);
+    }
+}

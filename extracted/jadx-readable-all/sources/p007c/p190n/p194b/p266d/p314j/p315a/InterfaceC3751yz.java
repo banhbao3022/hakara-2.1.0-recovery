@@ -1,0 +1,11 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import p007c.p190n.p194b.p266d.p314j.p315a.m20;
+
+/* JADX INFO: renamed from: c.n.b.d.j.a.yz */
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public interface InterfaceC3751yz<AppOpenAd extends m20> extends r50<AppOpenAd> {
+    /* JADX INFO: renamed from: a */
+    k60 mo8328a();
+}

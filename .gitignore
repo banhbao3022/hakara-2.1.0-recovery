@@ -1,0 +1,16 @@
+# Rebuilt and test APK binaries & signatures (~450 MB)
+*.apk
+*.idsig
+*.keystore
+*.jks
+
+# Duplicate / raw smali & dex dumps (~685 MB)
+/emulator-test-apktool/
+/extracted/apktool/
+/extracted/jadx/
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.idea/
+*.iml

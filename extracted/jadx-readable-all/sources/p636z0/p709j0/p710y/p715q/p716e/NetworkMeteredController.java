@@ -1,0 +1,44 @@
+package p636z0.p709j0.p710y.p715q.p716e;
+
+import android.content.Context;
+import android.os.Build;
+import p636z0.p709j0.Logger9;
+import p636z0.p709j0.NetworkType;
+import p636z0.p709j0.p710y.p715q.NetworkState;
+import p636z0.p709j0.p710y.p715q.p717f.Trackers;
+import p636z0.p709j0.p710y.p719s.WorkSpec;
+import p636z0.p709j0.p710y.p720t.p722t.TaskExecutor2;
+
+/* JADX INFO: renamed from: z0.j0.y.q.e.e, reason: use source file name */
+/* JADX INFO: compiled from: NetworkMeteredController.java */
+/* JADX INFO: loaded from: classes.dex */
+public class NetworkMeteredController extends ConstraintController<NetworkState> {
+
+    /* JADX INFO: renamed from: e */
+    public static final String f37455e = Logger9.m15886e("NetworkMeteredCtrlr");
+
+    public NetworkMeteredController(Context context, TaskExecutor2 taskExecutor2) {
+        super(Trackers.m15966a(context, taskExecutor2).f37480d);
+    }
+
+    @Override // p636z0.p709j0.p710y.p715q.p716e.ConstraintController
+    /* JADX INFO: renamed from: b */
+    public boolean mo15953b(WorkSpec workSpec) {
+        return workSpec.f37533j.f37243b == NetworkType.METERED;
+    }
+
+    @Override // p636z0.p709j0.p710y.p715q.p716e.ConstraintController
+    /* JADX INFO: renamed from: c */
+    public boolean mo15954c(NetworkState networkState) {
+        NetworkState networkState2 = networkState;
+        boolean z = true;
+        if (Build.VERSION.SDK_INT < 26) {
+            Logger9.m15885c().mo15887a(f37455e, "Metered network constraint is not supported before API 26, only checking for connected state.", new Throwable[0]);
+            return !networkState2.f37443a;
+        }
+        if (networkState2.f37443a && networkState2.f37445c) {
+            z = false;
+        }
+        return z;
+    }
+}

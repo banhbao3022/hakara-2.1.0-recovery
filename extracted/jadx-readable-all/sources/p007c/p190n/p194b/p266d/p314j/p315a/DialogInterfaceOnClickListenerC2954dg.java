@@ -1,0 +1,21 @@
+package p007c.p190n.p194b.p266d.p314j.p315a;
+
+import android.content.DialogInterface;
+
+/* JADX INFO: renamed from: c.n.b.d.j.a.dg */
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@20.1.0 */
+/* JADX INFO: loaded from: classes.dex */
+public final class DialogInterfaceOnClickListenerC2954dg implements DialogInterface.OnClickListener {
+
+    /* JADX INFO: renamed from: f */
+    public final /* synthetic */ C2991eg f13259f;
+
+    public DialogInterfaceOnClickListenerC2954dg(C2991eg c2991eg) {
+        this.f13259f = c2991eg;
+    }
+
+    @Override // android.content.DialogInterface.OnClickListener
+    public final void onClick(DialogInterface dialogInterface, int i) {
+        this.f13259f.m7693b("Operation denied by user.");
+    }
+}

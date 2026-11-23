@@ -1,0 +1,27 @@
+package p007c.p190n.p194b.p367f.p368a.p373d;
+
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Parcel;
+import android.os.RemoteException;
+
+/* JADX INFO: renamed from: c.n.b.f.a.d.a */
+/* JADX INFO: loaded from: classes.dex */
+public final class C5079a extends C5096i0 implements InterfaceC5083c {
+    public C5079a(IBinder iBinder) {
+        super(iBinder, "com.google.android.play.core.inappreview.protocol.IInAppReviewService");
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // p007c.p190n.p194b.p367f.p368a.p373d.InterfaceC5083c
+    /* JADX INFO: renamed from: F4 */
+    public final void mo11526F4(String str, Bundle bundle, InterfaceC5087e interfaceC5087e) throws RemoteException {
+        Parcel parcelM11536E0 = m11536E0();
+        parcelM11536E0.writeString(str);
+        int i = C5100k0.f26051a;
+        parcelM11536E0.writeInt(1);
+        bundle.writeToParcel(parcelM11536E0, 0);
+        parcelM11536E0.writeStrongBinder(interfaceC5087e);
+        m11537i1(2, parcelM11536E0);
+    }
+}
