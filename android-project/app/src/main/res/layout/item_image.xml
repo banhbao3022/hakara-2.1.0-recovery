@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="center" android:id="@id/rootView" android:tag="layout/item_image_0" android:focusable="true" android:clickable="true" android:layout_width="@dimen/dp_100" android:layout_height="@dimen/dp_100" android:layout_marginBottom="@dimen/dp_2"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.appcompat.widget.AppCompatImageView android:id="@id/image" android:tag="binding_1" android:layout_width="match_parent" android:layout_height="match_parent" />
+    <ImageView android:id="@id/iconChecked" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/dp_5" android:src="@drawable/ic_checked_image" android:layout_alignParentBottom="true" android:contentDescription="@null" android:layout_marginEnd="@dimen/dp_5" android:layout_alignParentEnd="true" />
+</RelativeLayout>

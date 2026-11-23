@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/add_image_layout" android:layout_width="match_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="center_vertical" android:id="@id/optionSolo" android:background="?selectableItemBackground" android:paddingTop="@dimen/dp_14" android:paddingBottom="@dimen/dp_14" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@id/add_camera_icon" android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_14" android:src="@drawable/ic_mic_float" android:contentDescription="@null" android:layout_marginStart="@dimen/dp_15" app:tint="@color/sub_title_color" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="@color/title_color" android:id="@id/add_camera_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/txt_solo" android:layout_marginStart="@dimen/dp_15" />
+    </LinearLayout>
+    <View android:background="@color/line" android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginStart="@dimen/dp_52" />
+    <LinearLayout android:gravity="center_vertical" android:id="@id/optionDuet" android:background="?selectableItemBackground" android:paddingTop="@dimen/dp_14" android:paddingBottom="@dimen/dp_14" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_20" android:src="@drawable/ic_mic_join_duet_white" android:contentDescription="@null" android:layout_marginStart="@dimen/dp_15" app:tint="@color/sub_title_color" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="@color/title_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/txt_duet" android:layout_marginStart="@dimen/dp_15" />
+    </LinearLayout>
+</LinearLayout>

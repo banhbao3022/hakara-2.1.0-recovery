@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/add_image_layout" android:layout_width="match_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView android:textSize="@dimen/font_title" android:textColor="@color/title_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp_15" android:text="@string/text_cancel_process_title" android:layout_marginStart="@dimen/fab_padding_margin" android:layout_marginEnd="@dimen/fab_padding_margin" />
+    <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/sub_title_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp_2" android:layout_marginBottom="@dimen/fab_padding_margin" android:text="@string/text_cancel_process_sub_title" android:layout_marginStart="@dimen/fab_padding_margin" android:layout_marginEnd="@dimen/fab_padding_margin" />
+    <LinearLayout android:gravity="center_vertical" android:id="@id/optionDraft" android:background="?selectableItemBackground" android:paddingTop="@dimen/dp_15" android:paddingBottom="@dimen/dp_15" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@id/add_camera_icon" android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_20" android:src="@drawable/ic_outline_book_24" android:contentDescription="@null" android:layout_marginStart="@dimen/fab_padding_margin" app:tint="@color/sub_title_color" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="@color/title_color" android:id="@id/add_camera_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/text_save_draft" android:layout_marginStart="@dimen/dp_10" />
+    </LinearLayout>
+    <View android:background="@color/line" android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginStart="@dimen/dp_44" />
+    <LinearLayout android:gravity="center_vertical" android:layout_gravity="center" android:id="@id/optionDelete" android:background="?selectableItemBackground" android:paddingTop="@dimen/dp_15" android:paddingBottom="@dimen/dp_15" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@id/add_lib_icon" android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_20" android:src="@drawable/ic_trash_red" android:scaleType="centerInside" android:contentDescription="@null" android:layout_marginStart="@dimen/fab_padding_margin" app:tint="@color/red_700" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="@color/red_700" android:id="@id/add_lib_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/text_cancel_delete_recording" android:layout_marginStart="@dimen/dp_10" />
+    </LinearLayout>
+    <View android:background="@color/line" android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginStart="@dimen/dp_44" />
+    <LinearLayout android:gravity="center_vertical" android:id="@id/optionContinue" android:background="?selectableItemBackground" android:paddingTop="@dimen/dp_15" android:paddingBottom="@dimen/dp_15" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_20" android:src="@drawable/ic_check_green_24dp" android:contentDescription="@null" android:layout_marginStart="@dimen/fab_padding_margin" app:tint="@color/header_color" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="@color/header_color" android:id="@id/continueEditing" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/text_continue_edit" android:layout_marginStart="@dimen/dp_10" />
+    </LinearLayout>
+</LinearLayout>

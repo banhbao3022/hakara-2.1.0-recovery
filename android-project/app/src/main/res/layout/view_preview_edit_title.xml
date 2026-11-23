@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center" android:layout_gravity="center" android:orientation="horizontal" android:id="@id/layout_filter_title" android:background="@color/effect_content_background" android:layout_width="match_parent" android:layout_height="@dimen/dp40"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button android:textColor="@android:color/white" android:id="@id/btn_preview_beauty" android:background="@android:color/transparent" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/tab_preview_beauty" android:layout_weight="1.0" />
+    <Button android:textColor="@android:color/white" android:id="@id/btn_preview_makeup" android:background="@android:color/transparent" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/tab_preview_makeup" android:layout_weight="1.0" />
+    <Button android:textColor="@android:color/white" android:id="@id/btn_preview_filter" android:background="@android:color/transparent" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/tab_preview_filter" android:layout_weight="1.0" />
+</LinearLayout>

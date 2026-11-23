@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_gravity="top" android:tag="layout/item_duet_trending_0" android:layout_width="match_parent" android:layout_height="wrap_content" app:cardBackgroundColor="@color/white" app:cardElevation="0.0dp"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:id="@id/rootView" android:background="?selectableItemBackgroundBorderless" android:paddingTop="@dimen/dp_14" android:paddingBottom="@dimen/dp_14" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <RelativeLayout android:layout_width="@dimen/dp_100" android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView android:id="@id/duetAvatar" android:tag="binding_1" android:background="@drawable/image_circle_border" android:padding="@dimen/dp_1" android:layout_width="@dimen/dp_60" android:layout_height="@dimen/dp_60" android:scaleType="centerCrop" android:layout_alignParentEnd="true" />
+            <androidx.appcompat.widget.AppCompatImageView android:id="@id/avatar" android:tag="binding_2" android:background="@drawable/image_circle_border" android:padding="@dimen/dp_1" android:layout_width="@dimen/dp_60" android:layout_height="@dimen/dp_60" android:scaleType="centerCrop" android:layout_alignParentStart="true" />
+        </RelativeLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="@dimen/dp_10" android:layout_marginEnd="@dimen/dp_10">
+            <TextView android:textSize="@dimen/font_normal" android:textStyle="bold" android:textColor="@color/title_color" android:ellipsize="end" android:tag="binding_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+            <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/sub_title_color" android:tag="binding_4" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/dp_0" android:paddingEnd="@dimen/dp_1" android:layout_marginStart="@dimen/dp_1">
+                <ImageView android:layout_width="@dimen/dp_10" android:layout_height="@dimen/dp_15" android:src="@drawable/ic_play_count_white" android:contentDescription="@null" app:tint="@color/sub_title_color" />
+                <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/sub_title_color" android:ellipsize="end" android:tag="binding_5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:lines="1" android:layout_marginStart="@dimen/dp_5" />
+                <ImageView android:layout_width="@dimen/fab_padding_margin" android:layout_height="@dimen/dp_14" android:src="@drawable/ic_like_count_white" android:contentDescription="@null" android:layout_marginStart="@dimen/fab_padding_margin" app:tint="@color/sub_title_color" />
+                <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/sub_title_color" android:ellipsize="end" android:tag="binding_6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:lines="1" android:layout_marginStart="@dimen/dp_5" />
+                <TextView android:textSize="@dimen/sp_9" android:textColor="@color/white_light" android:id="@id/txtMV" android:tag="binding_7" android:background="@drawable/bg_mv_corners" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mv" android:lines="1" android:paddingStart="@dimen/dp_10" android:paddingEnd="@dimen/dp_10" android:layout_marginStart="@dimen/dp_10" android:layout_marginEnd="@dimen/dp_5" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

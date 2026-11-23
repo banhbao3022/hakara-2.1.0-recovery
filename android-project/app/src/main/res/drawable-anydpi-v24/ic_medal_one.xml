@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector android:height="37.0dp" android:width="28.0dp" android:viewportWidth="28.0" android:viewportHeight="37.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt">
+    <path android:fillColor="@drawable/$ic_medal_one__0" android:pathData="M6.2759,35.565l7.6853,-5.0917l7.4784,5.1976l0.127,-18.5299l-15.1619,-0.1053z" android:strokeColor="#00000000" android:strokeWidth="1.0" android:fillType="nonZero" />
+    <path android:fillColor="@drawable/$ic_medal_one__1" android:pathData="M19.1644,17.6208l1.1077,0.0085l-0.124,17.8591l-1.102,-0.7666z" android:strokeColor="#00000000" android:strokeWidth="1.0" android:fillType="nonZero" />
+    <path android:fillColor="@drawable/$ic_medal_one__2" android:pathData="M7.6763,35.4079l0.1229,-17.8706l1.1077,0.0085l-0.1186,17.1253z" android:strokeColor="#00000000" android:strokeWidth="1.0" android:fillType="nonZero" />
+    <path android:fillColor="@drawable/$ic_medal_one__3" android:pathData="M13.878,14.1951m-12.1951,0a12.1951,12.1951 0,1 1,24.3902 0a12.1951,12.1951 0,1 1,-24.3902 0" android:strokeColor="#ffde05" android:strokeWidth="2.0" android:fillType="nonZero" />
+    <path android:fillColor="#000000" android:pathData="M12.9197,20.9699l0,-11.2499l-2.6455,1.0528l0,-1.6872l2.8952,-1.343l2.1326,0l0,13.2273z" android:strokeColor="#00000000" android:strokeWidth="1.0" android:fillType="nonZero" />
+    <path android:fillColor="#fff249" android:pathData="M12.9197,20.9699l0,-11.2499l-2.6455,1.0528l0,-1.6872l2.8952,-1.343l2.1326,0l0,13.2273z" android:strokeColor="#00000000" android:strokeWidth="1.0" android:fillType="nonZero" />
+</vector>

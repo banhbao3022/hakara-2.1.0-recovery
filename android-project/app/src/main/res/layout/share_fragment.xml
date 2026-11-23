@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:tag="layout/share_fragment_0" android:paddingTop="@dimen/dp_15" android:paddingBottom="@dimen/dp_2" android:focusable="false" android:focusableInTouchMode="true" android:layout_width="match_parent" android:layout_height="wrap_content" app:behavior_hideable="false" app:behavior_peekHeight="0.0dp" app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView android:textSize="@dimen/font_body" android:textStyle="bold" android:textColor="@color/black_80" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/dp_5" android:text="@string/txt_share_title" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@id/recyclerViewShare" android:layout_width="match_parent" android:layout_height="@dimen/dp_210" />
+</LinearLayout>

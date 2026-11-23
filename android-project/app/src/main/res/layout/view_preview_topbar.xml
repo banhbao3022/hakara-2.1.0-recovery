@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge android:orientation="vertical" android:id="@id/layout_preview_topbar" android:layout_width="match_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Button android:id="@id/btn_close" android:background="@drawable/ic_camera_preview_close" android:layout_width="@dimen/dp30" android:layout_height="@dimen/dp30" android:layout_marginTop="@dimen/top_button_margin" android:layout_marginStart="@dimen/top_button_margin" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/btn_select_music" android:focusable="true" android:clickable="true" android:layout_width="0.0dp" android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="@id/btn_close" app:layout_constraintWidth_default="percent" app:layout_constraintWidth_percent="0.6">
+        <ImageView android:background="@drawable/ic_camera_music" android:layout_width="@dimen/dp30" android:layout_height="@dimen/dp30" />
+        <TextView android:textColor="@color/white" android:gravity="center" android:id="@id/tv_music_name" android:layout_width="wrap_content" android:layout_height="@dimen/dp25" android:text="@string/tv_select_music" android:lines="1" android:textAlignment="center" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_switch" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/top_button_margin" android:layout_marginEnd="@dimen/top_button_margin" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
+        <ImageView android:id="@id/iv_switch" android:background="@drawable/ic_camera_switch_camera_light" android:layout_width="@dimen/top_button_width_height" android:layout_height="@dimen/top_button_width_height" />
+        <TextView android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lật" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp20" android:layout_weight="1.0" app:layout_constraintEnd_toEndOf="@id/btn_switch" app:layout_constraintStart_toStartOf="@id/btn_switch" app:layout_constraintTop_toBottomOf="@id/btn_switch">
+        <ImageView android:background="@drawable/ic_camera_setting_more_light" android:layout_width="@dimen/top_button_width_height" android:layout_height="@dimen/top_button_width_height" />
+        <TextView android:textColor="@color/white" android:id="@id/tv_speed_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Speed off" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_effect" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp20" android:layout_weight="1.0" app:layout_constraintEnd_toEndOf="@id/btn_speed" app:layout_constraintStart_toStartOf="@id/btn_speed" app:layout_constraintTop_toBottomOf="@id/btn_speed">
+        <ImageView android:background="@drawable/ic_camera_effect_light" android:layout_width="@dimen/top_button_width_height" android:layout_height="@dimen/top_button_width_height" />
+        <TextView android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Filter" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_setting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp20" android:layout_weight="1.0" app:layout_constraintEnd_toEndOf="@id/btn_effect" app:layout_constraintStart_toStartOf="@id/btn_effect" app:layout_constraintTop_toBottomOf="@id/btn_effect">
+        <ImageView android:background="@drawable/ic_camera_setting_more_light" android:layout_width="@dimen/top_button_width_height" android:layout_height="@dimen/top_button_width_height" />
+        <TextView android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="More" />
+    </LinearLayout>
+</merge>

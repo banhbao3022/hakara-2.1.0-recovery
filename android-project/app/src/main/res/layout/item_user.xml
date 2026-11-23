@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_gravity="top" android:tag="layout/item_user_0" android:layout_width="match_parent" android:layout_height="wrap_content" app:cardBackgroundColor="@color/white" app:cardElevation="0.0dp"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:id="@id/rootView" android:background="?selectableItemBackgroundBorderless" android:padding="@dimen/fab_padding_margin" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView android:id="@id/thumbnail" android:tag="binding_1" android:background="@drawable/ic_avatar_default" android:layout_width="@dimen/dp_50" android:layout_height="@dimen/dp_50" android:scaleType="centerCrop" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_centerInParent="true" android:layout_marginStart="@dimen/dp_10" android:layout_marginEnd="@dimen/dp_10" android:layout_toStartOf="@id/btnFollow" android:layout_toEndOf="@id/thumbnail">
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="@dimen/font_normal" android:textStyle="bold" android:textColor="@color/title_color" android:id="@id/fullName" android:tag="binding_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="2" />
+                <TextView android:textSize="@dimen/sp_8" android:textColor="@color/white_light" android:gravity="center" android:id="@id/lblLevel" android:tag="binding_3" android:layout_width="@dimen/dp_34" android:layout_height="@dimen/dp_14" android:paddingStart="@dimen/dp_8" android:paddingEnd="@dimen/dp_0" android:layout_marginStart="@dimen/dp_8" />
+            </LinearLayout>
+            <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/sub_title_color" android:tag="binding_4" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView android:textSize="@dimen/font_small" android:gravity="center" android:id="@id/btnFollow" android:tag="binding_5" android:paddingTop="@dimen/dp_4" android:paddingBottom="@dimen/dp_4" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:textAllCaps="false" android:paddingStart="@dimen/dp_18" android:paddingEnd="@dimen/dp_18" android:layout_alignParentEnd="true" app:backgroundTint="@null" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

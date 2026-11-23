@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/add_image_layout" android:layout_width="match_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:id="@id/takePhoneClick" android:background="?selectableItemBackground" android:padding="@dimen/dp_15" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@id/add_camera_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_outline_photo_camera_24" android:contentDescription="@null" android:layout_marginStart="@dimen/dp_10" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="#898989" android:id="@id/add_camera_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/text_add_photo_camera" android:layout_marginStart="@dimen/dp_10" />
+    </LinearLayout>
+    <View android:id="@id/toolbarLine" android:background="@color/line" android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginStart="@dimen/dp_60" />
+    <LinearLayout android:id="@id/chooseLibrary" android:background="?selectableItemBackground" android:padding="@dimen/dp_15" android:focusable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@id/add_lib_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_outline_image_24" android:contentDescription="@null" android:layout_marginStart="@dimen/dp_10" />
+        <TextView android:textSize="@dimen/font_title" android:textColor="#898989" android:id="@id/add_lib_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/text_add_existing_photo" android:layout_marginStart="@dimen/dp_10" />
+    </LinearLayout>
+</LinearLayout>

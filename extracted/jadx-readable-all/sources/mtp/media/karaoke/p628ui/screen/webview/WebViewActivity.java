@@ -181,7 +181,17 @@ public final class WebViewActivity extends AppCompatActivity {
         webView.setWebChromeClient(new C7385c());
         if (stringExtra2 != null) {
             webView.setWebViewClient(new C7384b(stringExtra2, this, webView));
-            webView.loadUrl(stringExtra2);
+            HashMap<String, String> headers = new HashMap<>();
+            if (p555j.p556a.p557a.p606h.p609c.p612c.ModelPrefs.f32358a != null) {
+                String token = (String) p007c.p071d.p078c.p079a.outline.m1584f(
+                    p555j.p556a.p557a.p606h.p609c.p612c.ModelPrefs.f32358a.getString("access_token", null),
+                    String.class
+                );
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token);
+                }
+            }
+            webView.loadUrl(stringExtra2, headers);
         }
     }
 

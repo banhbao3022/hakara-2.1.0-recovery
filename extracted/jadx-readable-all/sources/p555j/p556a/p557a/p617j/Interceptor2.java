@@ -50,6 +50,10 @@ public final class Interceptor2 implements Interceptor {
         HttpUrl httpUrlM13674b = request3.f29951b.m13669f().m13674b();
         Request3.a aVar3 = new Request3.a(request3);
         aVar3.m13321i(httpUrlM13674b);
+        if ("suggestqueries.google.com".equals(httpUrlM13674b.f30647g)) {
+            aVar3.m13318f(request3.f29952c, request3.f29954e);
+            return realInterceptorChain.mo13492a(aVar3.m13314b());
+        }
         aVar3.m13316d("Accept", "application/json");
         StringBuilder sb = new StringBuilder();
         Locale locale = Locale.getDefault();

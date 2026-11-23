@@ -178,7 +178,7 @@ public interface ApiService {
     /* JADX INFO: renamed from: d */
     Object m14149d(@QueryMap HashMap<String, String> map, Continuation<? super GetListResponse<User>> continuation);
 
-    @GET("http://suggestqueries.google.com/complete/search")
+    @GET("https://suggestqueries.google.com/complete/search")
     /* JADX INFO: renamed from: d0 */
     Object m14150d0(@Query("q") String str, @Query("client") String str2, @Query("ds") String str3, @Query("hl") String str4, Continuation<Object> continuation);
 

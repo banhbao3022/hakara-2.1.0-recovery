@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="@dimen/dp_250" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp_100" android:layout_marginStart="@dimen/dp_20"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/bg_send_gift_animation_corners" android:padding="@dimen/dp_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_marginEnd="@dimen/dp_30" android:layout_alignParentStart="true">
+        <androidx.appcompat.widget.AppCompatImageView android:id="@id/senderAvatar" android:background="@drawable/ic_avatar_default" android:layout_width="@dimen/dp_40" android:layout_height="@dimen/dp_40" android:contentDescription="@null" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="@dimen/dp_40" android:layout_marginStart="@dimen/dp_6" android:layout_marginEnd="@dimen/dp_6">
+            <TextView android:textSize="@dimen/font_small" android:textStyle="bold" android:textColor="@color/white_light" android:ellipsize="end" android:id="@id/senderFullName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+            <TextView android:textSize="@dimen/font_small" android:textColor="@color/white_light" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/txt_send" />
+        </LinearLayout>
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatImageView android:id="@id/giftImage" android:background="@drawable/ic_avatar_default" android:layout_width="@dimen/dp_50" android:layout_height="@dimen/dp_50" android:layout_centerVertical="true" android:contentDescription="@null" android:layout_alignParentEnd="true" />
+</RelativeLayout>

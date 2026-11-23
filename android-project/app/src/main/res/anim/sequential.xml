@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set android:interpolator="@android:anim/linear_interpolator" android:fillAfter="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate android:duration="2000" android:fillAfter="true" android:startOffset="400" android:fromXDelta="0.0%p" android:toXDelta="70.00001%p" />
+    <translate android:duration="2000" android:fillAfter="true" android:startOffset="1200" android:fromYDelta="0.0%p" android:toYDelta="70.00001%p" />
+    <translate android:duration="2000" android:fillAfter="true" android:startOffset="2000" android:fromXDelta="0.0%p" android:toXDelta="-70.00001%p" />
+    <translate android:duration="2000" android:fillAfter="true" android:startOffset="2800" android:fromYDelta="0.0%p" android:toYDelta="-70.00001%p" />
+    <rotate android:interpolator="@android:anim/cycle_interpolator" android:duration="3000" android:fromDegrees="0.0" android:toDegrees="360.0" android:pivotX="39.999996%" android:pivotY="39.999996%" android:startOffset="3900" android:repeatCount="infinite" android:repeatMode="restart" />
+</set>

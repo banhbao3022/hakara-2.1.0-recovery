@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@id/container" android:tag="layout/main_activity_0" android:background="@color/white" android:layout_width="match_parent" android:layout_height="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <fragment android:name="androidx.navigation.fragment.NavHostFragment" android:id="@id/navHostFragment" android:layout_width="0.0dp" android:layout_height="0.0dp" app:defaultNavHost="true" app:layout_constraintBottom_toTopOf="@id/navigation" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@id/navigation" android:background="@drawable/bg_navigation_bar" android:layout_width="0.0dp" android:layout_height="wrap_content" android:layout_marginStart="0.0dp" android:layout_marginEnd="0.0dp" app:itemIconTint="@drawable/tab_color" app:labelVisibilityMode="labeled" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintRight_toRightOf="parent" app:menu="@menu/navigation" style="@style/BottomNavigationView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

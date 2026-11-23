@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBottomSheetDialogTheme" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:statusBarColor">@color/transparent_white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarDividerColor">@color/line</item>
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+    <style name="AppBottomSheetDialogThemeGift" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:backgroundDimAmount">0.2</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:statusBarColor">@color/transparent_white</item>
+        <item name="android:navigationBarColor">#f0151515</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarDividerColor">#f0151515</item>
+        <item name="bottomSheetStyle">@style/AppModalStyleGift</item>
+    </style>
+    <style name="AppBottomSheetDialogThemeSing" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:backgroundDimAmount">0.0</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:statusBarColor">@color/transparent_white</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarDividerColor">#000000</item>
+        <item name="bottomSheetStyle">@style/AppModalStyleSing</item>
+    </style>
+    <style name="AppTheme" parent="@style/HakaraThem">
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarDividerColor">@color/line</item>
+    </style>
+    <style name="AppThemeSing" parent="@style/AppTheme">
+        <item name="android:navigationBarColor">@color/black_dark</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarDividerColor">@color/black_dark</item>
+    </style>
+    <style name="SplashTheme" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarDividerColor">@color/line</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+</resources>

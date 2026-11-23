@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:icon="@drawable/tab_home_selector" android:id="@id/feedFragment" android:title="@string/tab_home" />
+    <item android:icon="@drawable/tab_explore_selector" android:id="@id/exploreFragment" android:title="@string/tab_explore" />
+    <item android:icon="@drawable/tab_sing_selector" android:id="@id/songbookFragment" android:title="@string/tab_sing" />
+    <item android:icon="@drawable/tab_notification_selector" android:id="@id/notificationFragment" android:title="@string/tab_notification" />
+    <item android:icon="@drawable/tab_profile_selector" android:id="@id/profileFragment" android:title="@string/tab_profile" />
+</menu>

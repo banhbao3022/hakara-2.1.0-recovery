@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center" android:orientation="vertical" android:tag="layout/item_playing_gift_ranking_0" android:layout_width="@dimen/dp_80" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:gravity="center" android:id="@id/presentItem" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView android:id="@id/avatar" android:tag="binding_1" android:background="@drawable/ic_avatar_default" android:layout_width="@dimen/dp_46" android:layout_height="@dimen/dp_46" android:layout_marginTop="@dimen/fab_padding_margin" android:layout_alignParentTop="true" android:layout_marginStart="@dimen/dp_4" />
+        <androidx.appcompat.widget.AppCompatImageView android:id="@id/iconKing" android:tag="binding_2" android:layout_width="@dimen/dp_60" android:layout_height="@dimen/dp_60" />
+    </RelativeLayout>
+    <TextView android:textSize="@dimen/font_smaller" android:textColor="@color/black_40" android:tag="binding_3" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+</LinearLayout>

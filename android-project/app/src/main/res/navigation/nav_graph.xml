@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@id/nav_graph" app:startDestination="@id/songbookFragment"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <keep_state_fragment android:label="feed_fragment" android:name="mtp.media.karaoke.ui.screen.feed.FeedFragment" android:id="@id/feedFragment" />
+    <keep_state_fragment android:label="explore_fragment" android:name="mtp.media.karaoke.ui.screen.explore.ExploreFragment" android:id="@id/exploreFragment" />
+    <keep_state_fragment android:label="songbook_fragment" android:name="mtp.media.karaoke.ui.screen.song.SongbookFragment" android:id="@id/songbookFragment" />
+    <keep_state_fragment android:label="notification_fragment" android:name="mtp.media.karaoke.ui.screen.notification.NotificationFragment" android:id="@id/notificationFragment" />
+    <keep_state_fragment android:label="profile_fragment" android:name="mtp.media.karaoke.ui.screen.profile.ProfileFragment" android:id="@id/profileFragment" />
+</navigation>

@@ -1,0 +1,100 @@
+package p555j.p556a.p557a.p558a.p559a.p590r;
+
+import androidx.lifecycle.LiveData;
+import p007c.p451o.p452a.C5729a;
+import p477d1.Unit;
+import p477d1.p485u.Continuation;
+import p477d1.p485u.p486i.Intrinsics;
+import p477d1.p485u.p487j.p488a.ContinuationImpl5;
+import p477d1.p485u.p487j.p488a.DebugMetadata;
+import p477d1.p493x.p494b.InterfaceC6168p;
+import p477d1.p493x.p495c.Intrinsics2;
+import p500e1.p501a.CoroutineScope;
+import p555j.p556a.p557a.p606h.p609c.p611b.RecordingEntity;
+import p555j.p556a.p557a.p606h.p614e.RecordingRepository;
+import p636z0.p759s.MutableLiveData;
+
+/* JADX INFO: renamed from: j.a.a.a.a.r.f0 */
+/* JADX INFO: compiled from: SingViewModel.kt */
+/* JADX INFO: loaded from: classes2.dex */
+@DebugMetadata(m13068c = "mtp.media.karaoke.ui.screen.sing.SingViewModel$createLocalRecording$1", m13069f = "SingViewModel.kt", m13070l = {252, 256}, m13071m = "invokeSuspend")
+public final class C6795f0 extends ContinuationImpl5 implements InterfaceC6168p<CoroutineScope, Continuation<? super Unit>, Object> {
+
+    /* JADX INFO: renamed from: j */
+    public Object f31839j;
+
+    /* JADX INFO: renamed from: k */
+    public int f31840k;
+
+    /* JADX INFO: renamed from: l */
+    public final /* synthetic */ C6799h0 f31841l;
+
+    /* JADX INFO: renamed from: m */
+    public final /* synthetic */ RecordingEntity f31842m;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public C6795f0(C6799h0 c6799h0, RecordingEntity recordingEntity, Continuation continuation) {
+        super(2, continuation);
+        this.f31841l = c6799h0;
+        this.f31842m = recordingEntity;
+    }
+
+    @Override // p477d1.p485u.p487j.p488a.ContinuationImpl
+    /* JADX INFO: renamed from: a */
+    public final Continuation<Unit> mo4a(Object obj, Continuation<?> continuation) {
+        Intrinsics2.m13089e(continuation, "completion");
+        return new C6795f0(this.f31841l, this.f31842m, continuation);
+    }
+
+    @Override // p477d1.p493x.p494b.InterfaceC6168p
+    /* JADX INFO: renamed from: l */
+    public final Object mo5l(CoroutineScope coroutineScope, Continuation<? super Unit> continuation) {
+        Continuation<? super Unit> continuation2 = continuation;
+        Intrinsics2.m13089e(continuation2, "completion");
+        return new C6795f0(this.f31841l, this.f31842m, continuation2).mo6m(Unit.f29502a);
+    }
+
+    @Override // p477d1.p485u.p487j.p488a.ContinuationImpl
+    /* JADX INFO: renamed from: m */
+    public final Object mo6m(Object obj) throws Throwable {
+        LiveData liveData;
+        Intrinsics intrinsics = Intrinsics.COROUTINE_SUSPENDED;
+        int i = this.f31840k;
+        try {
+            if (i != 0) {
+                if (i == 1) {
+                    liveData = (MutableLiveData) this.f31839j;
+                    C5729a.m12442O(obj);
+                } else {
+                    if (i != 2) {
+                        throw new IllegalStateException("call to 'resume' before 'invoke' with coroutine");
+                    }
+                    C5729a.m12442O(obj);
+                }
+                return Unit.f29502a;
+            }
+            C5729a.m12442O(obj);
+            C6799h0 c6799h0 = this.f31841l;
+            liveData = c6799h0.f31870y;
+            RecordingRepository recordingRepository = c6799h0.f31871z;
+            RecordingEntity recordingEntity = this.f31842m;
+            this.f31839j = liveData;
+            this.f31840k = 1;
+            obj = recordingRepository.mo14198j(recordingEntity, this);
+            if (obj == intrinsics) {
+                return intrinsics;
+            }
+            liveData.mo427j(obj);
+        } catch (Exception e) {
+            Intrinsics2.m13089e(String.valueOf(e.getMessage()), "message");
+            this.f31841l.f31870y.mo427j(new Long(0L));
+            C6799h0 c6799h1 = this.f31841l;
+            this.f31839j = null;
+            this.f31840k = 2;
+            if (c6799h1.mo13964m(e, this) == intrinsics) {
+                return intrinsics;
+            }
+        }
+        return Unit.f29502a;
+    }
+}

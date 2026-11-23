@@ -9,6 +9,21 @@
 /extracted/apktool/
 /extracted/jadx/
 
+# Large prebuilt third-party native .so binaries (>100 MB) in android-project
+# (Copied locally from emulator-test-apktool/lib; keep custom libAudioEngine.so tracked!)
+/android-project/app/src/main/jniLibs/*/*.so
+!/android-project/app/src/main/jniLibs/*/libAudioEngine.so
+!/android-project/app/src/main/jniLibs/*/libcainfilter.so
+!/android-project/app/src/main/jniLibs/*/libffcommand.so
+!/android-project/app/src/main/jniLibs/*/libffrecorder.so
+!/android-project/app/src/main/jniLibs/*/libmedia_editor.so
+!/android-project/app/src/main/jniLibs/*/libmedia_player.so
+!/android-project/app/src/main/jniLibs/*/libmetadata_retriever.so
+!/android-project/app/src/main/jniLibs/*/libmusicplayer.so
+!/android-project/app/src/main/jniLibs/*/libnativefilter.so
+!/android-project/app/src/main/jniLibs/*/libsoundtouch.so
+!/android-project/app/src/main/jniLibs/*/libvideoplayer.so
+
 # OS & IDE files
 .DS_Store
 Thumbs.db

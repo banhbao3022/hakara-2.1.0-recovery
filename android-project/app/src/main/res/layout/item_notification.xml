@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_gravity="top" android:tag="layout/item_notification_0" android:layout_width="match_parent" android:layout_height="wrap_content" app:cardBackgroundColor="@color/white" app:cardElevation="0.0dp"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical" android:id="@id/rootView" android:tag="binding_1" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <RelativeLayout android:background="?selectableItemBackgroundBorderless" android:padding="@dimen/fab_padding_margin" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView android:id="@id/thumbnail" android:tag="binding_2" android:background="@drawable/ic_avatar_default" android:layout_width="@dimen/dp_60" android:layout_height="@dimen/dp_60" android:scaleType="centerCrop" />
+            <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerInParent="true" android:layout_marginStart="@dimen/dp_10" android:layout_marginEnd="@dimen/dp_10" android:layout_toStartOf="@id/btnMore" android:layout_toEndOf="@id/thumbnail">
+                <TextView android:textSize="@dimen/font_normal" android:textColor="@color/title_color" android:ellipsize="end" android:id="@id/message" android:tag="binding_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="3" />
+                <TextView android:textSize="@dimen/font_small" android:textColor="@color/sub_title_color" android:id="@id/createdAt" android:tag="binding_4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/dp_2" android:layout_marginBottom="@dimen/dp_2" />
+            </LinearLayout>
+            <ImageView android:id="@id/btnMore" android:background="?selectableItemBackgroundBorderless" android:focusable="true" android:clickable="true" android:layout_width="@dimen/dp_20" android:layout_height="@dimen/dp_30" android:src="@drawable/ic_more" android:scaleType="fitCenter" android:layout_centerInParent="true" android:contentDescription="@null" android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
