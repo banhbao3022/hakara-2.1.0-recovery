@@ -36,7 +36,7 @@ public final class ProfileFragment2 extends Lambda implements InterfaceC6153a<Un
     @Override // p477d1.p493x.p494b.InterfaceC6153a
     /* JADX INFO: renamed from: c */
     public Unit mo2c() {
-        StringBuilder sbM1556G = outline.m1556G("https://www.karavietnam.com/report-violation?content_id=");
+        StringBuilder sbM1556G = outline.m1556G("http://10.0.2.2:3000/report-violation?content_id=");
         User userM421d = ProfileFragment.this.mo13882Z0().f31515m.m421d();
         sbM1556G.append(userM421d != null ? Integer.valueOf(userM421d.getId()) : null);
         sbM1556G.append("&content_type=r&lang=");

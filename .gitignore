@@ -1,13 +1,25 @@
-# Rebuilt and test APK binaries & signatures (~450 MB)
+# Rebuilt and test APK/AAB binaries & private keystores
 *.apk
+*.aab
 *.idsig
 *.keystore
 *.jks
+/keystore/
+/dist-singora/
 
 # Duplicate / raw smali & dex dumps (~685 MB)
 /emulator-test-apktool/
+/singora-apktool/
 /extracted/apktool/
 /extracted/jadx/
+
+# Backend runtime SQLite DB, node_modules, and generated media/uploads
+/backend/node_modules/
+/backend/data/
+/backend/public/uploads/
+/backend/public/media/
+/notes/*.xml
+/notes/*.png
 
 # Large prebuilt third-party native .so binaries (>100 MB) in android-project
 # (Copied locally from emulator-test-apktool/lib; keep custom libAudioEngine.so tracked!)

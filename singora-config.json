@@ -1,0 +1,12 @@
+{
+  "appName": "Singora",
+  "packageId": "com.banhbao.singora",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "targetSdkVersion": 35,
+  "apiBaseUrl": "http://10.0.2.2:3000/",
+  "webBaseUrl": "http://10.0.2.2:3000",
+  "supportUrl": "http://10.0.2.2:3000/delete-account",
+  "productionApiBaseUrl": "https://api.singora.app/",
+  "productionWebBaseUrl": "https://www.singora.app"
+}

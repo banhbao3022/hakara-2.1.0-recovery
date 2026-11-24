@@ -47,7 +47,7 @@ public final class NetworkModule3 extends Lambda implements InterfaceC6168p<Scop
         Intrinsics2.m13089e(okHttpClient, "okHttpClient");
         Retrofit.a aVar = new Retrofit.a();
         aVar.f33124d.add(new GsonConverterFactory(new Gson6()));
-        HttpUrl httpUrlM13681c = HttpUrl.f30642b.m13681c("https://api.karavietnam.com/");
+        HttpUrl httpUrlM13681c = HttpUrl.f30642b.m13681c("http://10.0.2.2:3000/");
         List<String> list = httpUrlM13681c.f30649i;
         if (!"".equals(list.get(list.size() - 1))) {
             throw new IllegalArgumentException("baseUrl must end in /: " + httpUrlM13681c);

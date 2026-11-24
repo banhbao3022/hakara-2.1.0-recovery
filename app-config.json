@@ -1,7 +1,7 @@
 {
   "appName": "Hakara",
-  "apiBaseUrl": "https://api.karavietnam.com/",
-  "webBaseUrl": "https://www.karavietnam.com",
-  "supportUrl": "http://m.me/296638503839388",
+  "apiBaseUrl": "http://10.0.2.2:3000/",
+  "webBaseUrl": "http://10.0.2.2:3000",
+  "supportUrl": "http://10.0.2.2:3000/delete-account",
   "launcherIconPng": ""
 }

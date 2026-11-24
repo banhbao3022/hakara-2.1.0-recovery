@@ -112,10 +112,10 @@ public final class SettingActivity extends BaseActivity3<SettingActivityBinding,
                     SkuDao.a.m14092i0((SettingActivity) this.f33891h, R.string.text_clear_cache_success, 0, 2);
                     return Unit.f29502a;
                 case 5:
-                    LinkUtils2.m14254a("https://www.karavietnam.com/privacy", (SettingActivity) this.f33891h);
+                    LinkUtils2.m14254a("http://10.0.2.2:3000/privacy", (SettingActivity) this.f33891h);
                     return Unit.f29502a;
                 case 6:
-                    LinkUtils2.m14254a("https://www.karavietnam.com/terms", (SettingActivity) this.f33891h);
+                    LinkUtils2.m14254a("http://10.0.2.2:3000/terms", (SettingActivity) this.f33891h);
                     return Unit.f29502a;
                 case 7:
                     ((SettingActivity) this.f33891h).startActivity(new Intent("android.intent.action.VIEW", Uri.parse("http://m.me/296638503839388")));

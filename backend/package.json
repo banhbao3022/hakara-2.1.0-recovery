@@ -1,0 +1,17 @@
+{
+  "name": "singora-karaoke-backend",
+  "version": "1.0.0",
+  "description": "Full-featured REST API, media streaming, and UGC moderation backend for Hakara & Singora",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "generate-media": "node scripts/generate-media.js",
+    "test": "node scripts/test-api.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "ffmpeg-static": "^5.2.0",
+    "multer": "^1.4.5-lts.2"
+  }
+}
