@@ -7,6 +7,6 @@
   "apiBaseUrl": "http://10.0.2.2:3000/",
   "webBaseUrl": "http://10.0.2.2:3000",
   "supportUrl": "http://10.0.2.2:3000/delete-account",
-  "productionApiBaseUrl": "https://from-wiley-design-founded.trycloudflare.com/",
-  "productionWebBaseUrl": "https://from-wiley-design-founded.trycloudflare.com"
+  "productionApiBaseUrl": "https://api.singora.app/",
+  "productionWebBaseUrl": "https://www.singora.app"
 }
