@@ -1,8 +1,9 @@
 # Hakara 2.1.0 — Customization, Rebranding & Architecture Guide
 
-This guide explains **what is recovered**, **how easy it is to modify**, and **how to build your own customized app** using either:
-1. **Track A (Instant APK Rebuilder & Patcher)** — Modify URLs, App Name, Launcher Icons, and build a signed, installable APK in ~30 seconds.
-2. **Track B (Android Studio Gradle Project)** — Full source-level customization in `android-project/`.
+This guide explains **what is recovered**, **how easy it is to modify**, and **how to build your own customized app** using any of three workflows:
+1. **Track A (Instant Reference APK Patcher — `mtp.media.karaoke`)** — Modify URLs, App Name, Launcher Icons, and build a signed APK in ~30 seconds via [`scripts/build-custom-apk.ps1`](scripts/build-custom-apk.ps1).
+2. **Track B (Android Studio Gradle Project)** — Full source-level exploration and customization in [`android-project/`](android-project/).
+3. **Track C (Google Play Store Rebrand — Singora `com.banhbao.singora`)** — Full package-ID rebrand, `targetSdkVersion 35` (Android 14–16) runtime hardening, 16 KB ZIP-aligned APK, and validated `.aab` bundle via [`scripts/build-singora.ps1`](scripts/build-singora.ps1) & [`scripts/build-singora-aab.ps1`](scripts/build-singora-aab.ps1).
 
 ---
 
@@ -87,3 +88,23 @@ When JADX exported the obfuscated Kotlin packages, it renamed single-letter pack
 - `p555j.p556a.p557a.p616i.*` (`j.a.a.i.*`): Generated Android **DataBinding** classes (`*Binding.java` — note: Android Studio generates these automatically from `res/layout/*.xml` when `dataBinding true` is enabled).
 - `p555j.p556a.p557a.p617j.*` (`j.a.a.j.*`): **Koin DI & Networking Modules** (`AppModule`, `NetworkModule3`, `Interceptor2`, `RepositoryModule`, `ViewModelModule`).
 - `p555j.p556a.p557a.p619l.*` (`j.a.a.l.*`): **Utilities** (`DeviceUtils`, `PathUtils`, `LinkUtils2`, `DialogUtils`).
+
+---
+
+## 5. Track C: Google Play Store Rebrand — Singora (`com.banhbao.singora`)
+
+For production Google Play deployment under a clean application ID (`com.banhbao.singora`, installable side-by-side with `mtp.media.karaoke`) targeting **Android 15 (`targetSdkVersion 35`)**:
+
+1. **Configure [`singora-config.json`](singora-config.json):** Set `appName`, `packageId`, `versionCode`, `versionName`, `targetSdkVersion`, `productionApiBaseUrl`, and `productionWebBaseUrl`.
+2. **Build & Sign APK (`singora-apktool/` -> `dist-singora/`):**
+   ```powershell
+   .\scripts\build-singora.ps1 -Install       # Local/Emulator build
+   .\scripts\build-singora.ps1 -Production    # Strict-HTTPS Play Store APK (zipalign -P 16 -f 4)
+   ```
+3. **Build & Validate Google Play Bundle (`.aab`):**
+   ```powershell
+   .\scripts\build-singora-aab.ps1            # Outputs dist-singora\singora-1.0.0-playstore-release.aab
+   ```
+4. **JNI Compatibility Note:** Even when `package` / `applicationId` is rebranded to `com.banhbao.singora`, internal JNI-bound classes (`SingActivity`, `ProcessActivity`, `NativeUtils`) remain in `mtp.media.karaoke.*` so prebuilt `libAudioEngine.so` resolves `Java_mtp_media_karaoke_*` symbols without binary patching.
+
+See **[`GOOGLE_PLAY_DEPLOY_GUIDE.md`](GOOGLE_PLAY_DEPLOY_GUIDE.md)** for full cloud backend deployment, Android 14–16 runtime hardening details, and 16 KB page-size alignment notes.

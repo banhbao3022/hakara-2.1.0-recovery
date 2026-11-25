@@ -1,0 +1,25 @@
+services:
+  singora-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: singora-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_PATH: /app/data/singora.db
+      ENFORCE_SIG: ${ENFORCE_SIG:-false}
+      APP_HMAC_KEY: ${APP_HMAC_KEY:-}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-52428800}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-600}
+      RATE_LIMIT_WRITE_MAX: ${RATE_LIMIT_WRITE_MAX:-120}
+    volumes:
+      - singora_db:/app/data
+      - singora_uploads:/app/public/uploads
+
+volumes:
+  singora_db:
+  singora_uploads:

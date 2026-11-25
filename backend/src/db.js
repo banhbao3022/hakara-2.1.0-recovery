@@ -12,7 +12,9 @@ const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'singora.db');
 const db = new DatabaseSync(DB_PATH);
 
 db.exec('PRAGMA journal_mode = WAL;');
+db.exec('PRAGMA synchronous = NORMAL;');
 db.exec('PRAGMA foreign_keys = ON;');
+db.exec('PRAGMA busy_timeout = 5000;');
 
 function nowStr() {
   return new Date().toISOString().replace('T', ' ').slice(0, 19);
@@ -108,7 +110,7 @@ function initSchema() {
       type INTEGER DEFAULT 0,
       format INTEGER DEFAULT 0,
       video_ratio INTEGER DEFAULT 0,
-      privacy INTEGER DEFAULT 1,
+      privacy INTEGER DEFAULT 0,
       pin INTEGER DEFAULT 0,
       status INTEGER DEFAULT 1,
       duration INTEGER DEFAULT 24,
@@ -303,6 +305,14 @@ function initSchema() {
       status TEXT DEFAULT 'open',
       created_at TEXT NOT NULL
     );
+
+    CREATE INDEX IF NOT EXISTS idx_recordings_user ON recordings(user_id, pin DESC, id DESC);
+    CREATE INDEX IF NOT EXISTS idx_recordings_song ON recordings(song_id, privacy, like_count DESC);
+    CREATE INDEX IF NOT EXISTS idx_recordings_feed ON recordings(privacy, play_count DESC, id DESC);
+    CREATE INDEX IF NOT EXISTS idx_comments_content ON comments(content_id, id DESC);
+    CREATE INDEX IF NOT EXISTS idx_likes_target ON likes(likeable_id, likeable_type, status);
+    CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, id DESC);
+    CREATE INDEX IF NOT EXISTS idx_presents_recording ON presents(recording_id, stars DESC);
   `);
 }
 
@@ -365,12 +375,12 @@ function seedIfNeeded() {
   `);
 
   const seedRecordings = [
-    ['Midnight Starlight - Cover', 'midnight-starlight-luna', 1, 1, 0, 'Late night studio reverb take! Sing with me!', '/media/covers/song-1.png', '/media/songs/rec-1.m4a', null, '/share/recording/1', 0, 0, 0, 1, 1, 1, 20, 1, 1, 342, 48, 2, 12, 3, 5, 50, 10.7769, 106.7009, ts, ts],
-    ['Neon City Dreams (Open Duet)', 'neon-city-duet-kai', 2, 3, 1, 'Join my duet part B! Headphones recommended.', '/media/covers/song-3.png', '/media/songs/song-3.mp4', '/media/songs/song-3.mp4', '/share/recording/2', 1, 1, 0, 1, 0, 1, 20, 2, 1, 518, 79, 1, 19, 8, 9, 90, 21.0285, 105.8542, ts, ts],
-    ['Ocean Breeze Ballad - Live', 'ocean-breeze-mia', 3, 2, 0, 'First ballad recording of the week!', '/media/covers/song-2.png', '/media/songs/rec-2.m4a', null, '/share/recording/3', 0, 0, 0, 1, 0, 1, 20, 1, 1, 215, 33, 1, 7, 1, 3, 30, 16.0544, 108.2022, ts, ts],
-    ['Golden Hour Serenade', 'golden-hour-luna', 1, 5, 0, 'Warm hall echo preset test', '/media/covers/song-5.png', '/media/songs/rec-1.m4a', null, '/share/recording/4', 0, 0, 0, 1, 0, 1, 20, 3, 1, 189, 27, 0, 4, 2, 2, 20, 10.7800, 106.7050, ts, ts],
-    ['Electric Heartbeat (Open Duet)', 'electric-heartbeat-luna', 1, 6, 2, 'Who wants to harmonize the chorus?', '/media/covers/song-6.png', '/media/songs/rec-2.m4a', null, '/share/recording/5', 1, 0, 0, 1, 0, 1, 20, 1, 1, 276, 41, 0, 9, 5, 4, 40, 10.7750, 106.6980, ts, ts],
-    ['Sunset Boulevard Acoustic', 'sunset-boulevard-kai', 2, 4, 0, 'Unplugged acoustic vibe', '/media/covers/song-4.png', '/media/songs/rec-1.m4a', null, '/share/recording/6', 0, 0, 0, 1, 0, 1, 20, 0, 1, 164, 22, 0, 3, 0, 1, 10, 21.0300, 105.8500, ts, ts]
+    ['Midnight Starlight - Cover', 'midnight-starlight-luna', 1, 1, 0, 'Late night studio reverb take! Sing with me!', '/media/covers/song-1.png', '/media/songs/rec-1.m4a', null, '/share/recording/1', 0, 0, 0, 0, 1, 1, 20, 1, 1, 342, 48, 2, 12, 3, 5, 50, 10.7769, 106.7009, ts, ts],
+    ['Neon City Dreams (Open Duet)', 'neon-city-duet-kai', 2, 3, 1, 'Join my duet part B! Headphones recommended.', '/media/covers/song-3.png', '/media/songs/song-3.mp4', '/media/songs/song-3.mp4', '/share/recording/2', 1, 1, 0, 0, 0, 1, 20, 2, 1, 518, 79, 1, 19, 8, 9, 90, 21.0285, 105.8542, ts, ts],
+    ['Ocean Breeze Ballad - Live', 'ocean-breeze-mia', 3, 2, 0, 'First ballad recording of the week!', '/media/covers/song-2.png', '/media/songs/rec-2.m4a', null, '/share/recording/3', 0, 0, 0, 0, 0, 1, 20, 1, 1, 215, 33, 1, 7, 1, 3, 30, 16.0544, 108.2022, ts, ts],
+    ['Golden Hour Serenade', 'golden-hour-luna', 1, 5, 0, 'Warm hall echo preset test', '/media/covers/song-5.png', '/media/songs/rec-1.m4a', null, '/share/recording/4', 0, 0, 0, 0, 0, 1, 20, 3, 1, 189, 27, 0, 4, 2, 2, 20, 10.7800, 106.7050, ts, ts],
+    ['Electric Heartbeat (Open Duet)', 'electric-heartbeat-luna', 1, 6, 2, 'Who wants to harmonize the chorus?', '/media/covers/song-6.png', '/media/songs/rec-2.m4a', null, '/share/recording/5', 1, 0, 0, 0, 0, 1, 20, 1, 1, 276, 41, 0, 9, 5, 4, 40, 10.7750, 106.6980, ts, ts],
+    ['Sunset Boulevard Acoustic', 'sunset-boulevard-kai', 2, 4, 0, 'Unplugged acoustic vibe', '/media/covers/song-4.png', '/media/songs/rec-1.m4a', null, '/share/recording/6', 0, 0, 0, 0, 0, 1, 20, 0, 1, 164, 22, 0, 3, 0, 1, 10, 21.0300, 105.8500, ts, ts]
   ];
   for (const r of seedRecordings) {
     insertRec.run(...r);
@@ -460,8 +470,25 @@ function createToken() {
   return 'sgr_' + crypto.randomBytes(24).toString('hex');
 }
 
+let dbClosed = false;
+function closeDb() {
+  if (dbClosed) return;
+  dbClosed = true;
+  try {
+    db.exec('PRAGMA wal_checkpoint(TRUNCATE);');
+  } catch (_e) {
+    // Ignore checkpoint errors during shutdown
+  }
+  try {
+    db.close();
+  } catch (_e) {
+    // Ignore close errors if already closed
+  }
+}
+
 module.exports = {
   db,
   nowStr,
-  createToken
+  createToken,
+  closeDb
 };

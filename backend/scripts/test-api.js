@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const BASE = process.env.API_URL || 'http://127.0.0.1:3000';
+const BASE = (process.env.API_URL || process.env.BASE_URL || 'http://127.0.0.1:3000').replace(/\/+$/, '');
 
 async function reqJson(method, urlPath, { token, body, headers = {} } = {}) {
   const opts = {
@@ -47,7 +47,8 @@ async function reqJson(method, urlPath, { token, body, headers = {} } = {}) {
   const devRes = await reqJson('POST', '/v1/auth/device?os=2&os_version=16&app_version=2.1.0&unique_id=emu_test_1');
   assert.equal(devRes.data.registered, true);
 
-  const loginRes = await reqJson('POST', '/v1/auth/google/login?gg_user_id=gg_tester_99&full_name=Test+Vocalist&email=tester@singora.app&unique_id=emu_test_1');
+  const testGgId = `gg_tester_${Date.now()}`;
+  const loginRes = await reqJson('POST', `/v1/auth/google/login?gg_user_id=${testGgId}&full_name=Test+Vocalist&email=tester@singora.app&unique_id=emu_test_1`);
   const user = loginRes.data;
   assert.ok(user.id > 0);
   assert.ok(user.access_token && user.access_token.startsWith('sgr_'));
@@ -99,7 +100,7 @@ async function reqJson(method, urlPath, { token, body, headers = {} } = {}) {
   fd.append('song_id', '1');
   fd.append('name', 'Automated Test Cover');
   fd.append('message', 'Uploaded via multipart test');
-  fd.append('privacy', '1');
+  fd.append('privacy', '0');
   fd.append('duration', '20');
   const createdRec = await reqJson('POST', '/v1/recordings', { token, body: fd });
   assert.equal(createdRec.data.name, 'Automated Test Cover');
@@ -133,7 +134,7 @@ async function reqJson(method, urlPath, { token, body, headers = {} } = {}) {
   assert.ok(tasks.data.length >= 4);
   await reqJson('POST', '/v1/daily-task/addLog?type=1&unique_id=emu_test_1', { token });
   const reward = await reqJson('POST', `/v1/daily-task/collect-reward?daily_task_id=${tasks.data[0].id}&unique_id=emu_test_1`, { token });
-  assert.equal(reward.status, 1);
+  assert.equal(reward.status, 201);
   assert.ok(reward.coins > 0);
 
   // Cleanup test recording so public feed stays neat
@@ -150,7 +151,36 @@ async function reqJson(method, urlPath, { token, body, headers = {} } = {}) {
   for (const webPath of ['/privacy', '/terms', '/report-violation?content_id=1', '/delete-account']) {
     const wRes = await fetch(`${BASE}${webPath}`);
     assert.equal(wRes.status, 200, `Expected 200 on ${webPath}`);
+    assert.equal(wRes.headers.get('x-content-type-options'), 'nosniff');
   }
 
-  console.log('ALL 28 INTEGRATION CHECKS PASSED SUCCESSFULLY!');
+  // 8. Production Security Hardening Checks (Rate-limit headers, unsafe upload rejection, JSON error handler)
+  const songsRes = await fetch(`${BASE}/v1/songs`);
+  assert.ok(songsRes.headers.get('x-ratelimit-limit'), 'Expected X-RateLimit-Limit header on /v1 routes');
+
+  const badForm = new FormData();
+  badForm.append('image', new Blob(['<svg onload=alert(1)>'], { type: 'image/svg+xml' }), 'xss.svg');
+  const badUploadRes = await fetch(`${BASE}/v1/images/add`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: badForm
+  });
+  assert.equal(badUploadRes.status, 400, 'Expected 400 rejection for unsafe .svg upload');
+  const badUploadJson = await badUploadRes.json();
+  assert.equal(badUploadJson.status, 400);
+
+  const badJsonRes = await fetch(`${BASE}/v1/images/deletes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: '{bad_json'
+  });
+  assert.equal(badJsonRes.status, 400, 'Expected 400 JSON response for malformed JSON body');
+  const badJsonPayload = await badJsonRes.json();
+  assert.equal(badJsonPayload.status, 400);
+
+  // 9. Self-service Account Deletion (Google Play policy compliance + keeps DB clean)
+  const delAccountRes = await reqJson('DELETE', '/v1/users/me', { token });
+  assert.equal(delAccountRes.status, 1);
+
+  console.log('ALL 33 INTEGRATION & SECURITY CHECKS PASSED SUCCESSFULLY!');
 })();

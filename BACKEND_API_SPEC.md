@@ -95,7 +95,7 @@ All response wrapper classes are located under [`mtp/media/karaoke/data/remote/r
 - **`GetCollectedRewardResponse`** (`POST /v1/daily-task/collect-reward`):
   ```json
   {
-    "status": 1,
+    "status": 201,
     "coins": 10,
     "diamonds": 0,
     "exps": 5

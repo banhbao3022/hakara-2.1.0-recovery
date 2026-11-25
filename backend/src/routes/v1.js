@@ -11,14 +11,64 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
+const ALLOWED_UPLOAD_EXTS = new Set([
+  '.m4a', '.mp3', '.wav', '.aac', '.flac', '.ogg',
+  '.mp4', '.webm', '.3gp', '.mkv', '.mov',
+  '.png', '.jpg', '.jpeg', '.webp'
+]);
+
+const BLOCKED_UPLOAD_EXTS = new Set([
+  '.html', '.htm', '.svg', '.xml', '.js', '.mjs', '.cjs',
+  '.php', '.sh', '.bat', '.cmd', '.ps1', '.exe', '.dll', '.jar', '.apk'
+]);
+
+const ALLOWED_MIME_PREFIXES = ['audio/', 'video/', 'image/'];
+const MAX_UPLOAD_BYTES = Number(process.env.MAX_UPLOAD_BYTES || 50 * 1024 * 1024); // 50 MB default
+
+function inferSafeExtension(file) {
+  const rawExt = path.extname(file.originalname || '').toLowerCase();
+  if (ALLOWED_UPLOAD_EXTS.has(rawExt)) return rawExt;
+  const mime = String(file.mimetype || '').toLowerCase();
+  if (mime.startsWith('image/png')) return '.png';
+  if (mime.startsWith('image/webp')) return '.webp';
+  if (mime.startsWith('image/')) return '.jpg';
+  if (mime.startsWith('video/')) return '.mp4';
+  return '.m4a';
+}
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
   filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname || '') || '.m4a';
+    const ext = inferSafeExtension(file);
     cb(null, `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`);
   }
 });
-const upload = multer({ storage });
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: MAX_UPLOAD_BYTES,
+    files: 4,
+    fields: 30
+  },
+  fileFilter: (_req, file, cb) => {
+    const rawExt = path.extname(file.originalname || '').toLowerCase();
+    const mime = String(file.mimetype || '').toLowerCase();
+    if (BLOCKED_UPLOAD_EXTS.has(rawExt) || mime === 'image/svg+xml' || mime === 'text/html') {
+      const err = new Error(`Unsupported or unsafe upload file type: ${rawExt || mime}`);
+      err.statusCode = 400;
+      return cb(err);
+    }
+    const extAllowed = rawExt ? ALLOWED_UPLOAD_EXTS.has(rawExt) : false;
+    const mimeAllowed = ALLOWED_MIME_PREFIXES.some(prefix => mime.startsWith(prefix)) || mime === 'application/octet-stream';
+    if (!extAllowed && !mimeAllowed) {
+      const err = new Error(`Unsupported media format (${rawExt || mime}). Allowed: audio, video, or PNG/JPEG/WebP image.`);
+      err.statusCode = 400;
+      return cb(err);
+    }
+    cb(null, true);
+  }
+});
 
 // Merge query and body params seamlessly because Retrofit client uses @Query/@QueryMap on many POST/PUT routes
 function getParams(req) {
@@ -178,7 +228,7 @@ function formatRecording(req, row, viewerId = null, includeDuet = true) {
     type: Number(row.type || 0),
     format: Number(row.format || 0),
     video_ratio: Number(row.video_ratio || 0),
-    privacy: Number(row.privacy ?? 1),
+    privacy: Number(row.privacy ?? 0),
     pin: Number(row.pin || 0),
     status: Number(row.status ?? 1),
     duration: Number(row.duration || 20),
@@ -528,9 +578,18 @@ router.get('/songs/search', (req, res) => {
 router.post('/songs/downloadFromYoutube', upload.single('file'), (req, res) => {
   const p = getParams(req);
   const songId = Number(p.song_id || 1);
+  const mediaType = Number(p.type || 1);
   if (req.file) {
-    const rel = `/uploads/${req.file.filename}`;
-    db.prepare('UPDATE songs SET link_video = ? WHERE id = ?').run(rel, songId);
+    const existing = db.prepare('SELECT link, link_video FROM songs WHERE id = ?').get(songId);
+    // Only populate server-cached track when the song does not already have a curated studio backing track
+    if (existing && !existing.link_video && !existing.link) {
+      const rel = `/uploads/${req.file.filename}`;
+      if (mediaType === 2 || rel.endsWith('.mp4')) {
+        db.prepare('UPDATE songs SET link_video = ? WHERE id = ?').run(rel, songId);
+      } else {
+        db.prepare('UPDATE songs SET link = ? WHERE id = ?').run(rel, songId);
+      }
+    }
   }
   res.json({ data: { uploaded: true, song_id: songId } });
 });
@@ -596,18 +655,18 @@ router.get('/recordings/following', (req, res) => {
   let rows = db.prepare(`
     SELECT r.* FROM recordings r
     JOIN follows f ON f.user_id = r.user_id AND f.follower_id = ? AND f.status = 1
-    WHERE r.privacy = 1
+    WHERE r.privacy = 0
     ORDER BY r.id DESC LIMIT 20
   `).all(viewerId);
   if (rows.length === 0) {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY id DESC LIMIT 20').all();
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY id DESC LIMIT 20').all();
   }
   res.json({ data: rows.map(r => formatRecording(req, r, viewerId || null)) });
 });
 
 router.get('/recordings/nearby', (req, res) => {
   const viewerId = req.user ? req.user.id : null;
-  const rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY play_count DESC LIMIT 20').all();
+  const rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY play_count DESC LIMIT 20').all();
   res.json({ data: rows.map(r => formatRecording(req, r, viewerId)) });
 });
 
@@ -622,9 +681,9 @@ router.get('/recordings/detail/:id', (req, res) => {
 router.get('/recordings/ranking/:id', (req, res) => {
   const songId = Number(req.params.id);
   const viewerId = req.user ? req.user.id : null;
-  let rows = db.prepare('SELECT * FROM recordings WHERE song_id = ? AND privacy = 1 ORDER BY like_count DESC, play_count DESC LIMIT 20').all(songId);
+  let rows = db.prepare('SELECT * FROM recordings WHERE song_id = ? AND privacy = 0 ORDER BY like_count DESC, play_count DESC LIMIT 20').all(songId);
   if (rows.length === 0) {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY like_count DESC LIMIT 10').all();
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY like_count DESC LIMIT 10').all();
   }
   res.json({ data: rows.map(r => formatRecording(req, r, viewerId)) });
 });
@@ -680,9 +739,9 @@ router.get('/recordings', (req, res) => {
   if (userId) {
     rows = db.prepare('SELECT * FROM recordings WHERE user_id = ? ORDER BY pin DESC, id DESC LIMIT ? OFFSET ?').all(userId, limit, offset);
   } else if (type === 10) {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY id DESC LIMIT ? OFFSET ?').all(limit, offset);
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY id DESC LIMIT ? OFFSET ?').all(limit, offset);
   } else {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY play_count DESC, id DESC LIMIT ? OFFSET ?').all(limit, offset);
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY play_count DESC, id DESC LIMIT ? OFFSET ?').all(limit, offset);
   }
   res.json({ data: rows.map(r => formatRecording(req, r, viewerId)) });
 });
@@ -732,7 +791,7 @@ router.post(
       Number(p.type && p.type !== 'null' ? p.type : 0),
       Number(p.format && p.format !== 'null' ? p.format : 0),
       Number(p.video_ratio && p.video_ratio !== 'null' ? p.video_ratio : 0),
-      Number(p.privacy && p.privacy !== 'null' ? p.privacy : 1),
+      Number(p.privacy != null && p.privacy !== 'null' && p.privacy !== '' ? p.privacy : 0),
       Number(p.duration && p.duration !== 'null' ? p.duration : 20),
       Number(p.effect && p.effect !== 'null' ? p.effect : 0),
       p.use_headphone === 'false' ? 0 : 1,
@@ -745,6 +804,16 @@ router.post(
     db.prepare('UPDATE recordings SET share_url = ? WHERE id = ?').run(`/share/recording/${recId}`, recId);
     db.prepare('UPDATE users SET recording_count = recording_count + 1 WHERE id = ?').run(viewer.id);
     db.prepare('UPDATE songs SET recordCount = recordCount + 1 WHERE id = ?').run(songId);
+
+    // Mark "Record 1 Karaoke Song" daily task (type = 2) ready to collect (status = 0)
+    const recTask = db.prepare('SELECT id FROM daily_tasks WHERE type = 2 LIMIT 1').get();
+    if (recTask) {
+      const existingLog = db.prepare('SELECT id FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ?').get(viewer.id, recTask.id);
+      if (!existingLog) {
+        db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 0, ?, ?)')
+          .run(viewer.id, recTask.id, ts, ts);
+      }
+    }
 
     const created = db.prepare('SELECT * FROM recordings WHERE id = ?').get(recId);
     res.json({ data: formatRecording(req, created, viewer.id) });
@@ -796,9 +865,9 @@ router.post('/duets/:id', (req, res) => {
 
 router.get('/duets/recordings', (req, res) => {
   const viewerId = req.user ? req.user.id : null;
-  let rows = db.prepare('SELECT * FROM recordings WHERE type >= 1 AND privacy = 1 ORDER BY duet_count DESC, id DESC LIMIT 20').all();
+  let rows = db.prepare('SELECT * FROM recordings WHERE type >= 1 AND privacy = 0 ORDER BY duet_count DESC, id DESC LIMIT 20').all();
   if (rows.length === 0) {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY id DESC LIMIT 10').all();
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY id DESC LIMIT 10').all();
   }
   res.json({ data: rows.map(r => formatRecording(req, r, viewerId)) });
 });
@@ -821,9 +890,9 @@ router.get('/explores/recordings', (req, res) => {
   const viewerId = req.user ? req.user.id : null;
   let rows;
   if (type === 3) {
-    rows = db.prepare('SELECT * FROM recordings WHERE type >= 1 AND privacy = 1 ORDER BY duet_count DESC, id DESC LIMIT ?').all(limit);
+    rows = db.prepare('SELECT * FROM recordings WHERE type >= 1 AND privacy = 0 ORDER BY duet_count DESC, id DESC LIMIT ?').all(limit);
   } else {
-    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 1 ORDER BY like_count DESC, id DESC LIMIT ?').all(limit);
+    rows = db.prepare('SELECT * FROM recordings WHERE privacy = 0 ORDER BY like_count DESC, id DESC LIMIT ?').all(limit);
   }
   if (rows.length === 0) {
     rows = db.prepare('SELECT * FROM recordings ORDER BY id DESC LIMIT ?').all(limit);
@@ -982,10 +1051,24 @@ router.post('/gifts/present', (req, res) => {
   db.prepare('INSERT INTO presents (user_id, receiver_id, recording_id, gift_id, quantity, stars, unique_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
     .run(viewer.id, receiverId, recId, gift.id, qty, starsEarned, uniqueId, ts, ts);
 
-  db.prepare('UPDATE users SET coins = MAX(0, coins - ?), exps = exps + ? WHERE id = ?').run(totalCost, (gift.exp || 5) * qty, viewer.id);
+  if (Number(gift.type || 1) === 1) {
+    db.prepare('UPDATE users SET diamonds = MAX(0, diamonds - ?), exps = exps + ? WHERE id = ?').run(totalCost, (gift.exp || 5) * qty, viewer.id);
+  } else {
+    db.prepare('UPDATE users SET coins = MAX(0, coins - ?), exps = exps + ? WHERE id = ?').run(totalCost, (gift.exp || 5) * qty, viewer.id);
+  }
   db.prepare('UPDATE users SET stars = stars + ?, gift_count = gift_count + ? WHERE id = ?').run(starsEarned, qty, receiverId);
   if (rec) {
     db.prepare('UPDATE recordings SET gift_count = gift_count + ?, star_count = star_count + ? WHERE id = ?').run(qty, starsEarned, recId);
+  }
+
+  // Mark "Send a Gift to a Friend" daily task ready to collect (status = 0 in Task.java)
+  const giftTask = db.prepare('SELECT id FROM daily_tasks WHERE type = 4 LIMIT 1').get();
+  if (giftTask) {
+    const existingLog = db.prepare('SELECT id FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ?').get(viewer.id, giftTask.id);
+    if (!existingLog) {
+      db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 0, ?, ?)')
+        .run(viewer.id, giftTask.id, ts, ts);
+    }
   }
 
   res.json({ data: { gifted: true, stars: starsEarned } });
@@ -1027,11 +1110,22 @@ router.post('/diamonds/apple/exchange', (req, res) => {
   res.json({ status: 1, amount });
 });
 
+const CHECKIN_COINS_28 = [10,20,30,40,50,60,100, 15,25,35,45,55,65,120, 20,30,40,50,60,70,150, 25,35,45,55,65,80,200];
+const CHECKIN_DIAMONDS_28 = [0,0,1,0,0,1,3, 0,0,1,0,0,1,5, 0,0,1,0,0,2,5, 0,0,2,0,0,2,10];
+const CHECKIN_EXPS_28 = [5,10,15,20,25,30,50, 10,15,20,25,30,35,60, 15,20,25,30,35,40,80, 20,25,30,35,40,50,100];
+
 router.get('/daily-task', (req, res) => {
   const viewerId = req.user ? req.user.id : 1;
+  const ts = nowStr();
   const tasks = db.prepare('SELECT * FROM daily_tasks ORDER BY id ASC').all();
-  const data = tasks.map(t => {
-    const log = db.prepare('SELECT * FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ? ORDER BY id DESC LIMIT 1').get(viewerId, t.id);
+  const data = tasks.map((t, idx) => {
+    let log = db.prepare('SELECT * FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ? ORDER BY id DESC LIMIT 1').get(viewerId, t.id);
+    // Task #0 (Daily Check-In) auto-creates day=1, status=0 (ready to collect) on first visit matching TaskActivity2.java
+    if (idx === 0 && !log) {
+      const info = db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 0, ?, ?)')
+        .run(viewerId, t.id, ts, ts);
+      log = db.prepare('SELECT * FROM daily_task_logs WHERE id = ?').get(info.lastInsertRowid);
+    }
     return {
       id: t.id,
       name: t.name,
@@ -1041,15 +1135,15 @@ router.get('/daily-task', (req, res) => {
       coin: Number(t.coin || 20),
       diamond: Number(t.diamond || 0),
       exp: Number(t.exp || 10),
-      coins: JSON.parse(t.coins_json || '[10,20,30,40,50,60,100]'),
-      diamonds: JSON.parse(t.diamonds_json || '[0,0,1,0,0,1,3]'),
-      exps: JSON.parse(t.exps_json || '[5,10,15,20,25,30,50]'),
+      coins: CHECKIN_COINS_28,
+      diamonds: CHECKIN_DIAMONDS_28,
+      exps: CHECKIN_EXPS_28,
       log: log ? {
         id: log.id,
         user_id: log.user_id,
         daily_task_id: log.daily_task_id,
         day: Number(log.day || 1),
-        status: Number(log.status || 1),
+        status: Number(log.status ?? 0),
         created_at: log.created_at,
         updated_at: log.updated_at
       } : null,
@@ -1069,7 +1163,7 @@ router.post('/daily-task/addLog', (req, res) => {
 
   let log = db.prepare('SELECT * FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ? ORDER BY id DESC LIMIT 1').get(viewer.id, task.id);
   if (!log) {
-    const info = db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 1, ?, ?)')
+    const info = db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 0, ?, ?)')
       .run(viewer.id, task.id, ts, ts);
     log = db.prepare('SELECT * FROM daily_task_logs WHERE id = ?').get(info.lastInsertRowid);
   }
@@ -1079,7 +1173,7 @@ router.post('/daily-task/addLog', (req, res) => {
       user_id: log.user_id,
       daily_task_id: log.daily_task_id,
       day: Number(log.day || 1),
-      status: Number(log.status || 1),
+      status: Number(log.status ?? 0),
       created_at: log.created_at,
       updated_at: log.updated_at
     }
@@ -1102,13 +1196,15 @@ router.post('/daily-task/collect-reward', (req, res) => {
 
   const existing = db.prepare('SELECT * FROM daily_task_logs WHERE user_id = ? AND daily_task_id = ? ORDER BY id DESC LIMIT 1').get(viewer.id, task.id);
   if (existing) {
-    db.prepare('UPDATE daily_task_logs SET status = 2, updated_at = ? WHERE id = ?').run(ts, existing.id);
+    // Task.java status=1 means collected/completed
+    db.prepare('UPDATE daily_task_logs SET status = 1, updated_at = ? WHERE id = ?').run(ts, existing.id);
   } else {
-    db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 2, ?, ?)')
+    db.prepare('INSERT INTO daily_task_logs (user_id, daily_task_id, day, finished_count, status, created_at, updated_at) VALUES (?, ?, 1, 1, 1, ?, ?)')
       .run(viewer.id, task.id, ts, ts);
   }
 
-  res.json({ status: 1, coins, diamonds, exps });
+  // TaskActivity.java checks getCollectedRewardResponse.getStatus() == 201 to display reward popup
+  res.json({ status: 201, coins, diamonds, exps });
 });
 
 module.exports = router;

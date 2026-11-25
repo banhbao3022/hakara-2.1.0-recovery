@@ -74,12 +74,19 @@ if (-not (Test-Path -LiteralPath (Join-Path $SingoraApktoolDir 'AndroidManifest.
         'smali_classes2\j\a\a\a\a\m\a$g.smali',
         'smali_classes2\w0.smali',
         'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity.smali',
+        'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$b.smali',
+        'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$c.smali',
+        'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$p.smali',
+        'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$t.smali',
+        'smali_classes2\mtp\media\karaoke\utils\SingTicker.smali',
         'smali_classes2\mtp\media\karaoke\ui\screen\webview\WebViewActivity.smali',
         'smali\mtp\media\karaoke\ui\screen\setting\SettingActivity$a.smali'
     )) {
         $srcFile = Join-Path $SourceApktoolDir $rel
         $dstFile = Join-Path $SingoraApktoolDir $rel
         if (Test-Path -LiteralPath $srcFile) {
+            $dstParent = Split-Path -Path $dstFile -Parent
+            if (-not (Test-Path -LiteralPath $dstParent)) { New-Item -ItemType Directory -Path $dstParent -Force | Out-Null }
             Copy-Item -LiteralPath $srcFile -Destination $dstFile -Force
         }
     }
@@ -217,18 +224,205 @@ $compatSmali = @'
     move-result-object p0
     return-object p0
 .end method
+
+.method public static registerReceiver(Landroid/content/Context;Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;)Landroid/content/Intent;
+    .locals 2
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+    const/16 v1, 0x22
+    if-lt v0, v1, :cond_legacy
+    const/4 v0, 0x2
+    invoke-virtual {p0, p1, p2, v0}, Landroid/content/Context;->registerReceiver(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;I)Landroid/content/Intent;
+    move-result-object p0
+    return-object p0
+    :cond_legacy
+    invoke-virtual {p0, p1, p2}, Landroid/content/Context;->registerReceiver(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;)Landroid/content/Intent;
+    move-result-object p0
+    return-object p0
+.end method
+
+.method public static registerReceiver(Landroid/content/Context;Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;Ljava/lang/String;Landroid/os/Handler;)Landroid/content/Intent;
+    .locals 6
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+    const/16 v1, 0x22
+    if-lt v0, v1, :cond_legacy
+    const/4 v5, 0x2
+    move-object v0, p0
+    move-object v1, p1
+    move-object v2, p2
+    move-object v3, p3
+    move-object v4, p4
+    invoke-virtual/range {v0 .. v5}, Landroid/content/Context;->registerReceiver(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;Ljava/lang/String;Landroid/os/Handler;I)Landroid/content/Intent;
+    move-result-object p0
+    return-object p0
+    :cond_legacy
+    invoke-virtual {p0, p1, p2, p3, p4}, Landroid/content/Context;->registerReceiver(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;Ljava/lang/String;Landroid/os/Handler;)Landroid/content/Intent;
+    move-result-object p0
+    return-object p0
+.end method
 '@
 [System.IO.File]::WriteAllText($compatSmaliPath, $compatSmali, [System.Text.UTF8Encoding]::new($false))
 
-# Remove any previous PendingIntentCompat1 from smali/ and move pub/ from smali/ to smali_classes2/
+# Inject SingTicker.smali (native C++ Superpowered currentSeconds() 500ms UI timer & auto-finish loop without YouTube)
+$singTickerPath = Join-Path $SingoraApktoolDir 'smali_classes2\mtp\media\karaoke\utils\SingTicker.smali'
+$singTickerSmali = @'
+.class public final Lmtp/media/karaoke/utils/SingTicker;
+.super Ljava/lang/Object;
+.source "SingTicker.java"
+
+# interfaces
+.implements Ljava/lang/Runnable;
+
+# instance fields
+.field public final app:Lmtp/media/karaoke/ui/screen/sing/SingActivity;
+
+.method public constructor <init>(Lmtp/media/karaoke/ui/screen/sing/SingActivity;)V
+    .locals 0
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+    iput-object p1, p0, Lmtp/media/karaoke/utils/SingTicker;->app:Lmtp/media/karaoke/ui/screen/sing/SingActivity;
+    return-void
+.end method
+
+.method public static start(Lmtp/media/karaoke/ui/screen/sing/SingActivity;)V
+    .locals 4
+    const v0, 0x7f0a042f
+    invoke-virtual {p0, v0}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v0
+    if-eqz v0, :cond_end
+    new-instance v1, Lmtp/media/karaoke/utils/SingTicker;
+    invoke-direct {v1, p0}, Lmtp/media/karaoke/utils/SingTicker;-><init>(Lmtp/media/karaoke/ui/screen/sing/SingActivity;)V
+    const-wide/16 v2, 0x1f4
+    invoke-virtual {v0, v1, v2, v3}, Landroid/view/View;->postDelayed(Ljava/lang/Runnable;J)Z
+    :cond_end
+    return-void
+.end method
+
+.method public run()V
+    .locals 6
+
+    iget-object v0, p0, Lmtp/media/karaoke/utils/SingTicker;->app:Lmtp/media/karaoke/ui/screen/sing/SingActivity;
+    invoke-virtual {v0}, Landroid/app/Activity;->isFinishing()Z
+    move-result v1
+    if-nez v1, :cond_stop
+    invoke-virtual {v0}, Landroid/app/Activity;->isDestroyed()Z
+    move-result v1
+    if-eqz v1, :cond_alive
+    :cond_stop
+    return-void
+
+    :cond_alive
+    iget-boolean v1, v0, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->J:Z
+    if-eqz v1, :cond_reschedule
+
+    invoke-virtual {v0}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->currentSeconds()F
+    move-result v1
+    iput v1, v0, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->X:F
+
+    sget-object v2, Lj/a/a/h/a/f;->a:Lj/a/a/h/a/f$a;
+    invoke-virtual {v2, v1}, Lj/a/a/h/a/f$a;->a(F)Ljava/lang/String;
+    move-result-object v2
+
+    const v3, 0x7f0a042f
+    invoke-virtual {v0, v3}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v3
+    check-cast v3, Landroid/widget/TextView;
+    if-eqz v3, :cond_curr
+    invoke-virtual {v3, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    :cond_curr
+    const v3, 0x7f0a014c
+    invoke-virtual {v0, v3}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v3
+    check-cast v3, Landroid/widget/TextView;
+    if-eqz v3, :cond_prog
+    invoke-virtual {v3, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    :cond_prog
+    const v3, 0x7f0a037a
+    invoke-virtual {v0, v3}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v3
+    check-cast v3, Lmtp/media/karaoke/ui/widgets/CircleProgressBar;
+    if-eqz v3, :cond_seek
+    invoke-virtual {v3, v1}, Lmtp/media/karaoke/ui/widgets/CircleProgressBar;->setProgressWithAnimation(F)V
+
+    :cond_seek
+    const v3, 0x7f0a03d2
+    invoke-virtual {v0, v3}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v3
+    check-cast v3, Lmtp/media/karaoke/addon/seekbar/CustomSeekBar;
+    if-eqz v3, :cond_check_end
+    float-to-int v4, v1
+    invoke-virtual {v3, v4}, Landroid/widget/SeekBar;->setProgress(I)V
+
+    :cond_check_end
+    iget v3, v0, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->W:F
+    const/high16 v4, 0x40000000    # 2.0f
+    cmpl-float v4, v3, v4
+    if-lez v4, :cond_reschedule
+    const v4, 0x3e800000    # 0.25f
+    sub-float/2addr v3, v4
+    cmpl-float v3, v1, v3
+    if-ltz v3, :cond_reschedule
+    invoke-static {v0}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->b0(Lmtp/media/karaoke/ui/screen/sing/SingActivity;)V
+    return-void
+
+    :cond_reschedule
+    const v1, 0x7f0a042f
+    invoke-virtual {v0, v1}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->U(I)Landroid/view/View;
+    move-result-object v1
+    if-eqz v1, :cond_done
+    const-wide/16 v2, 0x1f4
+    invoke-virtual {v1, p0, v2, v3}, Landroid/view/View;->postDelayed(Ljava/lang/Runnable;J)Z
+    :cond_done
+    return-void
+.end method
+'@
+[System.IO.File]::WriteAllText($singTickerPath, $singTickerSmali, [System.Text.UTF8Encoding]::new($false))
+
+# Ensure SingActivity inner classes apply standalone C++ recording & Android 13-16 permission fixes idempotently
+$singP = Join-Path $SingoraApktoolDir 'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$p.smali'
+if (Test-Path -LiteralPath $singP) {
+    $spTxt = [System.IO.File]::ReadAllText($singP)
+    $spUpd = $spTxt.Replace('const-string v2, "android.permission.WRITE_EXTERNAL_STORAGE"', 'const-string v2, "android.permission.RECORD_AUDIO"')
+    if ($spTxt -ne $spUpd) { [System.IO.File]::WriteAllText($singP, $spUpd, [System.Text.UTF8Encoding]::new($false)) }
+}
+$singC = Join-Path $SingoraApktoolDir 'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$c.smali'
+if (Test-Path -LiteralPath $singC) {
+    $scTxt = [System.IO.File]::ReadAllText($singC)
+    $scUpd = [regex]::Replace($scTxt, '(iget-boolean v3, v2, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->I:Z\s+)if-eqz v3, :cond_f', '$1nop')
+    if ($scUpd -notmatch '->p0\(\)V') {
+        $scUpd = $scUpd.Replace(
+            "const v1, 0x7f080357`r`n`r`n    invoke-virtual {v0, v1}, Landroid/widget/ImageButton;->setImageResource(I)V",
+            "const v1, 0x7f080357`r`n`r`n    invoke-virtual {v0, v1}, Landroid/widget/ImageButton;->setImageResource(I)V`r`n`r`n    iget-object v0, p0, Lmtp/media/karaoke/ui/screen/sing/SingActivity`$c;->h:Ljava/lang/Object;`r`n    check-cast v0, Lmtp/media/karaoke/ui/screen/sing/SingActivity;`r`n    invoke-virtual {v0}, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->p0()V"
+        )
+    }
+    if ($scTxt -ne $scUpd) { [System.IO.File]::WriteAllText($singC, $scUpd, [System.Text.UTF8Encoding]::new($false)) }
+}
+$singB = Join-Path $SingoraApktoolDir 'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$b.smali'
+if (Test-Path -LiteralPath $singB) {
+    $sbTxt = [System.IO.File]::ReadAllText($singB)
+    $sbUpd = [regex]::Replace($sbTxt, '(iget v2, v1, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->X:F\s+)const/16 v5, 0x32', '$1const/16 v5, 0x3')
+    if ($sbTxt -ne $sbUpd) { [System.IO.File]::WriteAllText($singB, $sbUpd, [System.Text.UTF8Encoding]::new($false)) }
+}
+$singT = Join-Path $SingoraApktoolDir 'smali_classes2\mtp\media\karaoke\ui\screen\sing\SingActivity$t.smali'
+if (Test-Path -LiteralPath $singT) {
+    $stTxt = [System.IO.File]::ReadAllText($singT)
+    if ($stTxt -notmatch 'SingTicker;->start') {
+        $stUpd = [regex]::Replace($stTxt, '(iput-boolean v7, p1, Lmtp/media/karaoke/ui/screen/sing/SingActivity;->t0:Z)', "`$1`r`n    invoke-static {p1}, Lmtp/media/karaoke/utils/SingTicker;->start(Lmtp/media/karaoke/ui/screen/sing/SingActivity;)V")
+        [System.IO.File]::WriteAllText($singT, $stUpd, [System.Text.UTF8Encoding]::new($false))
+    }
+}
+
+# Remove any previous PendingIntentCompat1 from smali/ and move small leaf packages from smali/ to smali_classes2/
 # so classes.dex stays well below the 65,535 DEX method reference limit!
 $oldDex1Compat = Join-Path $SingoraApktoolDir 'smali\mtp\media\karaoke\utils\PendingIntentCompat1.smali'
 if (Test-Path -LiteralPath $oldDex1Compat) { Remove-Item -LiteralPath $oldDex1Compat -Force }
 
-$dex1Pub = Join-Path $SingoraApktoolDir 'smali\pub'
-$dex2Pub = Join-Path $SingoraApktoolDir 'smali_classes2\pub'
-if (Test-Path -LiteralPath $dex1Pub) {
-    $null = robocopy $dex1Pub $dex2Pub /E /MOVE /NFL /NDL /NJH /NJS /NC /NS
+foreach ($leafPkg in @('pub', 'me', 'y0')) {
+    $dex1Leaf = Join-Path $SingoraApktoolDir "smali\$leafPkg"
+    $dex2Leaf = Join-Path $SingoraApktoolDir "smali_classes2\$leafPkg"
+    if (Test-Path -LiteralPath $dex1Leaf) {
+        $null = robocopy $dex1Leaf $dex2Leaf /E /MOVE /NFL /NDL /NJH /NJS /NC /NS
+    }
 }
 
 $allSmaliHits = Get-ChildItem $SingoraApktoolDir -Include '*.smali' -Recurse |
@@ -238,6 +432,20 @@ foreach ($hit in $allSmaliHits) {
     $txt = [System.IO.File]::ReadAllText($hit.Path)
     $upd = [regex]::Replace($txt, '(Landroid/app/PendingIntent|Lmtp/media/karaoke/utils/PendingIntentCompat1);->get(Activity|Broadcast|Service)\(', 'Lmtp/media/karaoke/utils/PendingIntentCompat;->get$2(')
     if ($txt -ne $upd) { [System.IO.File]::WriteAllText($hit.Path, $upd, [System.Text.UTF8Encoding]::new($false)) }
+}
+
+# Android 14+ (targetSdk >= 34) dynamic BroadcastReceiver flag enforcement fix (RECEIVER_EXPORTED = 0x2)
+$recvHits = Get-ChildItem $SingoraApktoolDir -Include '*.smali' -Recurse |
+    Where-Object { $_.Name -ne 'PendingIntentCompat.smali' } |
+    Select-String -Pattern 'invoke-virtual \{([^}]+)\}, L(android/content/Context|android/app/Activity|android/app/Service);->registerReceiver\(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;(Ljava/lang/String;Landroid/os/Handler;)?\)Landroid/content/Intent;' -List
+foreach ($rh in $recvHits) {
+    $txt = [System.IO.File]::ReadAllText($rh.Path)
+    $upd = [regex]::Replace(
+        $txt,
+        'invoke-virtual \{([^}]+)\}, L(android/content/Context|android/app/Activity|android/app/Service);->registerReceiver\((Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;(?:Ljava/lang/String;Landroid/os/Handler;)?)\)Landroid/content/Intent;',
+        'invoke-static {$1}, Lmtp/media/karaoke/utils/PendingIntentCompat;->registerReceiver(Landroid/content/Context;$3)Landroid/content/Intent;'
+    )
+    if ($txt -ne $upd) { [System.IO.File]::WriteAllText($rh.Path, $upd, [System.Text.UTF8Encoding]::new($false)) }
 }
 
 # Android 14+ (targetSdk >= 34) exact alarm restriction fix for WorkManager ForceStopRunnable & Alarms:
@@ -257,6 +465,47 @@ foreach ($hit in $fpHits) {
     $txt = [System.IO.File]::ReadAllText($hit.Path)
     $upd = $txt.Replace('mtp.media.karaoke.fileprovider', "$pkgId.fileprovider")
     [System.IO.File]::WriteAllText($hit.Path, $upd, [System.Text.UTF8Encoding]::new($false))
+}
+
+# Fix relative LayoutManager class names in res/layout* XMLs (RecyclerView resolves leading "." against packageId,
+# whereas custom widget classes reside in mtp.media.karaoke.ui.widgets.*)
+$layoutXmls = Get-ChildItem (Join-Path $SingoraApktoolDir 'res') -Include '*.xml' -Recurse |
+    Where-Object { $_.Directory.Name -like 'layout*' }
+foreach ($lx in $layoutXmls) {
+    $lt = [System.IO.File]::ReadAllText($lx.FullName)
+    $lu = $lt.Replace('=".', '="mtp.media.karaoke.')
+    if ($lt -ne $lu) {
+        [System.IO.File]::WriteAllText($lx.FullName, $lu, [System.Text.UTF8Encoding]::new($false))
+    }
+}
+
+# Upgrade legacy Android <=12 storage permission checks in first-party & cropper screens for targetSdk 35
+foreach ($permRel in @(
+    @{ Path = 'smali\x.smali'; Old = 'android.permission.WRITE_EXTERNAL_STORAGE'; New = 'android.permission.RECORD_AUDIO' },
+    @{ Path = 'smali_classes2\k0.smali'; Old = 'android.permission.READ_EXTERNAL_STORAGE'; New = 'android.permission.READ_MEDIA_IMAGES' },
+    @{ Path = 'smali_classes2\k0.smali'; Old = 'android.permission.WRITE_EXTERNAL_STORAGE'; New = 'android.permission.READ_MEDIA_IMAGES' },
+    @{ Path = 'smali\com\theartofdev\edmodo\cropper\CropImageActivity.smali'; Old = 'android.permission.READ_EXTERNAL_STORAGE'; New = 'android.permission.READ_MEDIA_IMAGES' }
+)) {
+    $pp = Join-Path $SingoraApktoolDir $permRel.Path
+    if (Test-Path -LiteralPath $pp) {
+        $pt = [System.IO.File]::ReadAllText($pp)
+        $pu = $pt.Replace($permRel.Old, $permRel.New)
+        if ($pt -ne $pu) { [System.IO.File]::WriteAllText($pp, $pu, [System.Text.UTF8Encoding]::new($false)) }
+    }
+}
+
+# Rebrand Google Play Billing diamond SKU prefix from NativeUtils.getPackage() ("mtp.media.karaoke.") to "$pkgId."
+$skuSmali = Join-Path $SingoraApktoolDir 'smali\j\a\a\h\b\a.smali'
+if (Test-Path -LiteralPath $skuSmali) {
+    $st = [System.IO.File]::ReadAllText($skuSmali)
+    $su = [regex]::Replace(
+        $st,
+        'invoke-static \{\}, Lmtp/media/karaoke/utils/NativeUtils;->getPackage\(\)Ljava/lang/String;\s+move-result-object v2',
+        "const-string v2, `"$pkgId.`""
+    )
+    if ($st -ne $su) {
+        [System.IO.File]::WriteAllText($skuSmali, $su, [System.Text.UTF8Encoding]::new($false))
+    }
 }
 
 # 5. Rebrand Strings, URLs & Launcher Icons

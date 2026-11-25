@@ -1,0 +1,35 @@
+# Render Blueprint — 24/7 Production Deployment for Singora Karaoke Backend
+# Deploy: https://dashboard.render.com/select-repo?type=blueprint
+services:
+  - type: web
+    name: singora-backend
+    runtime: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: starter
+    region: singapore
+    healthCheckPath: /health
+    autoDeploy: true
+    disk:
+      name: singora-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: DB_PATH
+        value: /app/data/singora.db
+      - key: ENFORCE_SIG
+        value: "false"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: MAX_UPLOAD_BYTES
+        value: "52428800"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "60000"
+      - key: RATE_LIMIT_MAX
+        value: "600"
+      - key: RATE_LIMIT_WRITE_MAX
+        value: "120"
