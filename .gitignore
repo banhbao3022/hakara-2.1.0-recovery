@@ -9,6 +9,9 @@
 /extracted/apktool/
 /extracted/jadx/
 
+# scripts/patch-apk.sh working tree (decoded smali + resources, ~700 MB)
+/apk-build/
+
 # OS & IDE files
 .DS_Store
 Thumbs.db

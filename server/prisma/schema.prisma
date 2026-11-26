@@ -1,0 +1,478 @@
+// Schema for the Hakara 2.1.0 replacement backend.
+//
+// Column names are snake_case and match the client's Gson @SerializedName values
+// wherever a field is serialized straight through, so the serializers in
+// src/serializers stay close to a rename-free copy.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int     @id @default(autoincrement())
+  uid        String  @unique
+  fbUserId   String? @unique @map("fb_user_id")
+  ggUserId   String? @unique @map("gg_user_id")
+  fullName   String  @map("full_name")
+  email      String?
+  address    String?
+  city       String?
+  country    String?
+  language   String?
+  region     String?
+  phone      String?
+  avatar     String?
+  cover      String?
+  gender     Int     @default(0)
+  birthday   String?
+  bio        String?
+  exps       Int     @default(0)
+  diamonds   Int     @default(0)
+  coins      Int     @default(0)
+  stars      Int     @default(0)
+  label      String?
+  lat        Float?
+  long       Float?
+  // Denormalized counters, maintained in the same transaction as the row that
+  // changes them. See src/lib/counters.ts.
+  recordingCount    Int @default(0) @map("recording_count")
+  notificationCount Int @default(0) @map("notification_count")
+  followingCount    Int @default(0) @map("following_count")
+  followerCount     Int @default(0) @map("follower_count")
+  giftCount         Int @default(0) @map("gift_count")
+  playCount         Int @default(0) @map("play_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  devices         Device[]
+  recordings      Recording[]
+  duets           Duet[]
+  comments        Comment[]
+  likes           Like[]
+  shares          Share[]
+  images          Image[]
+  notifications   Notification[]       @relation("NotificationOwner")
+  sentNotifications Notification[]     @relation("NotificationSender")
+  following       Follow[]             @relation("Follower")
+  followers       Follow[]             @relation("Followed")
+  blocking        Block[]              @relation("Blocker")
+  blockedBy       Block[]              @relation("Blocked")
+  presentsSent    Present[]            @relation("PresentSender")
+  presentsGot     Present[]            @relation("PresentReceiver")
+  taskLogs        DailyTaskLog[]
+  diamondTxs      DiamondTransaction[]
+
+  @@index([recordingCount])
+  @@index([lat, long])
+  @@map("users")
+}
+
+model Device {
+  id           Int     @id @default(autoincrement())
+  uniqueId     String  @unique @map("unique_id")
+  userId       Int?    @map("user_id")
+  os           String?
+  osVersion    String? @map("os_version")
+  appVersion   String? @map("app_version")
+  deviceName   String? @map("device_name")
+  brand        String?
+  timezone     String?
+  screenWidth  Int?    @map("screen_width")
+  screenHeight Int?    @map("screen_height")
+  fcmToken     String? @map("fcm_token")
+  lat          Float?
+  long         Float?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("devices")
+}
+
+model Song {
+  id           Int     @id @default(autoincrement())
+  name         String
+  artist       String?
+  // Serialized as `youtubeId` / `recordCount`: the client's Song.kt has no
+  // @SerializedName on these two, so Gson uses the camelCase field names.
+  youtubeId    String? @map("youtube_id")
+  playerIasUrl String? @map("player_ias_url")
+  thumbnail    String?
+  cover        String?
+  // Self-hosted media. /v1/songs/getLink answers from these columns and never
+  // contacts YouTube.
+  link         String?
+  linkVideo    String? @map("link_video")
+  trending     Int     @default(0)
+  duetSinger   Int     @default(0) @map("duet_singer")
+  recordCount  Int     @default(0) @map("record_count")
+  region       String?
+  status       Int     @default(1)
+  // Category selector for GET /v1/songs?type=
+  type         Int     @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  recordings Recording[]
+  duets      Duet[]
+
+  @@index([type, status])
+  @@index([trending])
+  @@map("songs")
+}
+
+model Recording {
+  id           Int     @id @default(autoincrement())
+  name         String
+  slug         String?
+  userId       Int     @map("user_id")
+  songId       Int     @map("song_id")
+  // Nullable so the foreign key holds; the client's Recording.duet_id is a
+  // non-null int, so the serializer emits 0 for "not a duet join".
+  duetId       Int?    @map("duet_id")
+  message      String?
+  thumbnail    String?
+  url          String
+  urlVideoResize String? @map("url_video_resize")
+  shareUrl     String? @map("share_url")
+  type         Int     @default(0)
+  format       Int     @default(0)
+  videoRatio   Int     @default(0) @map("video_ratio")
+  privacy      Int     @default(1)
+  pin          Int     @default(0)
+  status       Int     @default(1)
+  duration     Int     @default(0)
+  effect       Int     @default(0)
+  effectCustom String? @map("effect_custom")
+  useHeadphone Boolean @default(false) @map("use_headphone")
+  imageIds     String? @map("image_ids")
+  lat          Float?
+  long         Float?
+
+  playCount    Int @default(0) @map("play_count")
+  likeCount    Int @default(0) @map("like_count")
+  commentCount Int @default(0) @map("comment_count")
+  shareCount   Int @default(0) @map("share_count")
+  duetCount    Int @default(0) @map("duet_count")
+  giftCount    Int @default(0) @map("gift_count")
+  starCount    Int @default(0) @map("star_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song      Song      @relation(fields: [songId], references: [id], onDelete: Restrict)
+  duet      Duet?     @relation("RecordingDuet", fields: [duetId], references: [id], onDelete: SetNull)
+  ownedDuet Duet?     @relation("DuetRecording")
+  presents  Present[]
+
+  @@index([userId, createdAt])
+  @@index([songId, createdAt])
+  @@index([privacy, status, createdAt])
+  @@index([duetId])
+  @@index([lat, long])
+  @@map("recordings")
+}
+
+// A duet "invitation": the open part of a recording that others can join.
+model Duet {
+  id          Int    @id @default(autoincrement())
+  userId      Int    @map("user_id")
+  songId      Int    @map("song_id")
+  recordingId Int    @unique @map("recording_id")
+  joinCount   Int    @default(0) @map("join_count")
+  // ArrayList<DuetSegment> as { n, s, e } — stored verbatim so the client gets
+  // back exactly what it sent.
+  segments    Json   @default("[]")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song       Song        @relation(fields: [songId], references: [id], onDelete: Cascade)
+  recording  Recording   @relation("DuetRecording", fields: [recordingId], references: [id], onDelete: Cascade)
+  joins      Recording[] @relation("RecordingDuet")
+
+  @@map("duets")
+}
+
+model Comment {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @map("user_id")
+  // Polymorphic. The client sends "recording"; "comment" is accepted for replies
+  // that are liked. Anything else is rejected — see src/lib/polymorphic.ts.
+  contentType String @map("content_type")
+  contentId  Int     @map("content_id")
+  parentId   Int     @default(0) @map("parent_id")
+  quoteId    Int     @default(0) @map("quote_id")
+  message    String
+  likeCount  Int     @default(0) @map("like_count")
+  replyCount Int     @default(0) @map("reply_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([contentType, contentId, parentId, createdAt])
+  @@map("comments")
+}
+
+model Like {
+  id         Int    @id @default(autoincrement())
+  userId     Int    @map("user_id")
+  targetType String @map("target_type")
+  targetId   Int    @map("target_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId])
+  @@index([targetType, targetId])
+  @@map("likes")
+}
+
+model Share {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @map("user_id")
+  targetType String  @map("target_type")
+  targetId   Int     @map("target_id")
+  social     Int     @default(0)
+  message    String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([targetType, targetId])
+  @@map("shares")
+}
+
+model Follow {
+  id         Int @id @default(autoincrement())
+  followerId Int @map("follower_id")
+  followedId Int @map("followed_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  follower User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followed User @relation("Followed", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
+  @@index([followedId])
+  @@map("follows")
+}
+
+model Block {
+  id        Int @id @default(autoincrement())
+  blockerId Int @map("blocker_id")
+  blockedId Int @map("blocked_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  blocker User @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+  @@map("blocks")
+}
+
+model Image {
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  image  String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("images")
+}
+
+model Notification {
+  id           Int     @id @default(autoincrement())
+  userId       Int     @map("user_id")
+  senderId     Int?    @map("sender_id")
+  title        String
+  message      String
+  contentId    Int     @default(0) @map("content_id")
+  subContentId Int?    @map("sub_content_id")
+  type         String
+  subType      String? @map("sub_type")
+  image        String?
+  isRead       Int     @default(0) @map("is_read")
+  readOs       String? @map("read_os")
+  readSection  String? @map("read_section")
+  pushedAt     DateTime? @map("pushed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User  @relation("NotificationOwner", fields: [userId], references: [id], onDelete: Cascade)
+  sender User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model Gift {
+  id     Int    @id @default(autoincrement())
+  name   String
+  image  String
+  type   Int    @default(1)
+  // Price in diamonds.
+  amount Int    @default(0)
+  // Experience granted to the receiver per unit.
+  exp    Int    @default(0)
+  // Stars granted to the receiver per unit.
+  stars  Int    @default(0)
+  status Int    @default(1)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  presents Present[]
+
+  @@map("gifts")
+}
+
+model Present {
+  id          Int @id @default(autoincrement())
+  userId      Int @map("user_id")
+  receiverId  Int @map("receiver_id")
+  recordingId Int @map("recording_id")
+  giftId      Int @map("gift_id")
+  quantity    Int @default(1)
+  stars       Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user      User      @relation("PresentSender", fields: [userId], references: [id], onDelete: Cascade)
+  receiver  User      @relation("PresentReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  recording Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  gift      Gift      @relation(fields: [giftId], references: [id], onDelete: Restrict)
+
+  @@index([recordingId, stars])
+  @@index([receiverId, stars])
+  @@index([userId, createdAt])
+  @@map("presents")
+}
+
+model DailyTask {
+  id       Int    @id @default(autoincrement())
+  name     String
+  type     Int
+  goal     Int    @default(1)
+  coin     Int    @default(0)
+  diamond  Int    @default(0)
+  exp      Int    @default(0)
+  // Streak ladders. Index 0 is day 1. Serialized as `coins`/`diamonds`/`exps`.
+  coins    Int[]  @default([])
+  diamonds Int[]  @default([])
+  exps     Int[]  @default([])
+  status   Int    @default(1)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  logs DailyTaskLog[]
+
+  @@map("daily_tasks")
+}
+
+model DailyTaskLog {
+  id          Int    @id @default(autoincrement())
+  userId      Int    @map("user_id")
+  dailyTaskId Int    @map("daily_task_id")
+  // Streak position, 1-based.
+  day         Int    @default(1)
+  // Progress toward DailyTask.goal for `date`.
+  progress    Int    @default(0)
+  // 0 = in progress, 1 = reward collected.
+  status      Int    @default(0)
+  // Calendar day the log belongs to, as yyyy-MM-dd in the server's timezone.
+  date        String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task DailyTask @relation(fields: [dailyTaskId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dailyTaskId, date])
+  @@map("daily_task_logs")
+}
+
+model Keyword {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  searchCount Int    @default(0) @map("search_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([searchCount])
+  @@map("keywords")
+}
+
+// GET /v1/explores → Simple3 { id, name, type, layout_type }
+model ExploreSection {
+  id         Int    @id @default(autoincrement())
+  name       String
+  type       Int    @default(0)
+  layoutType Int    @default(0) @map("layout_type")
+  // Which recordings this section draws from: see src/routes/explore.ts.
+  feed       String @default("latest")
+  position   Int    @default(0)
+  status     Int    @default(1)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([type, position])
+  @@map("explore_sections")
+}
+
+// GET /v1/recordings/background → Simple2 { key, value }
+model Background {
+  id       Int    @id @default(autoincrement())
+  key      String @unique
+  value    String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("backgrounds")
+}
+
+model DiamondTransaction {
+  id            Int     @id @default(autoincrement())
+  userId        Int     @map("user_id")
+  transactionId String  @unique @map("transaction_id")
+  productId     String  @map("product_id")
+  state         String?
+  uniqueId      String? @map("unique_id")
+  amount        Int     @default(0)
+  purchasedAt   String? @map("purchased_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("diamond_transactions")
+}
